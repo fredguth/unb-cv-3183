@@ -3,7 +3,7 @@ import scipy.spatial as sp
 import cv2
 
 
-img = cv2.imread('./media/venn_gray.png',cv2.IMREAD_UNCHANGED)
+img = cv2.imread('./media/venn.png',cv2.IMREAD_UNCHANGED)
 imgType = type(img[0,0]).__name__
 data = {
     'bgr': None,
