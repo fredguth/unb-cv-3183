@@ -3,7 +3,7 @@ import scipy.spatial as sp
 import cv2
 
 global img
-img = cv2.imread('./media/venn.jpg',cv2.IMREAD_UNCHANGED)
+img = cv2.imread('./media/venn_gray.jpg',cv2.IMREAD_UNCHANGED)
 imgType = type(img[0,0]).__name__
 
 def mouse_callback(event, column, line, flags, params):
@@ -11,8 +11,9 @@ def mouse_callback(event, column, line, flags, params):
         if (imgType == 'uint8'): #grayscale
             print (img [line, column])
         elif (imgType == 'ndarray'): #color         
-            bgr = img [ line, column ]           
-            print("(line, column):({},{}); BGR ({})".format(line, column,bgr))
+            bgr = img [ line, column ]   
+            rgb = list(reversed(bgr))        
+            print("(line, column):({},{}); BGR ({}); RGB ({})".format(line, column,bgr, rgb))
 
 while(1):
     cv2.imshow('window',img)
