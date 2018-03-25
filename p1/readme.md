@@ -12,5 +12,8 @@ Para rodar:
 * `python requisito3.py`
 * `python requisito4.py`
 
+Relatório:
+* ./relatório/fredguth.pdf
+
 Avisos:
 * Para fechar a janela, precisa ir para a janela 'Window" e teclar ESC
