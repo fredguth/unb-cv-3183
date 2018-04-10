@@ -6,7 +6,7 @@ img = cv2.imread('./media/baboon.jpg', cv2.IMREAD_COLOR)
 data = {
     "isMeasuring": False,
     "p1":[],
-    "p2":[]
+    "p2":[],
 }
 def dist(img, point):
     channels = 1
@@ -26,11 +26,14 @@ def mouse_callback(event, column, line, flags, params):
         params["isMeasuring"]= not params["isMeasuring"]
         if (params["isMeasuring"]):
             # first point
-            params["p1"] = [line, column]
+            global img
+            img = cv2.imread('./media/baboon.jpg', cv2.IMREAD_COLOR)
+            params["p1"] = [column, line]
             print ("p1: {}".format(params["p1"]))
         else:
             # second point
-            params["p2"] = [line, column]
+            params["p2"] = [column, line]
+            params["line"] = cv2.line(img,tuple(params["p1"]),tuple(params["p2"]),(255,0,0),5)
             print ("p2: {}".format(params["p2"]))
 
 while(1):
