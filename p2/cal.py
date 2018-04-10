@@ -20,7 +20,7 @@ objp[:, :2] = np.mgrid[0:7, 0:6].T.reshape(-1, 2)
 objpoints = []  # 3d point in real world space
 imgpoints = []  # 2d points in image plane.
 
-images = glob.glob('./media/*.jpg')
+images = glob.glob('./media/l*.jpg')
 
 for fname in images:
     img = cv2.imread(fname)
@@ -32,14 +32,34 @@ for fname in images:
     # If found, add object points, image points (after refining them)
     if ret == True:
         objpoints.append(objp)
-
+        # print(objp)
         corners2 = cv2.cornerSubPix(
             gray, corners, (11, 11), (-1, -1), criteria)
+        print(corners2)
         imgpoints.append(corners2)
-
         # Draw and display the corners
         img = cv2.drawChessboardCorners(img, (7, 6), corners2, ret)
-        clear_output(wait=True)
-        display(plt.imshow(img))
+        cv2.imshow('img', img)
+        cv2.waitKey(500)
+
+ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
+img = cv2.imread('./media/left12.jpg')
+h,  w = img.shape[:2]
+newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
+
+#undistort
+dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
+
+# crop the image
+x,y,w,h = roi
+dst = dst[y:y+h, x:x+w]
+
+
+while(1):
+    cv2.imshow('original', img)
+    cv2.imshow('undistort', dst)
+    k = cv2.waitKey(33)
+    if k==27:    # Esc key to stop
+        break
 
 cv2.destroyAllWindows()
