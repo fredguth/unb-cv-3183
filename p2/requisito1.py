@@ -8,18 +8,6 @@ data = {
     "p1":[],
     "p2":[],
 }
-def dist(img, point):
-    channels = 1
-    if (imgType == "ndarray"): #color imag
-        lines, columns, channels = img.shape #channels = 3
-    else:
-        lines, columns = img.shape
-    A = img.reshape((lines*columns, channels))
-    # B = point if (imgType == 'uint8') else point.reshape((1,3))
-    B = point.reshape((1,channels))
-    distances = sp.distance.cdist(A,B, metric='euclidean')
-    distances = distances.reshape((lines, columns, 1))
-    return distances
 
 def mouse_callback(event, column, line, flags, params):
     if event == 1: #left button in my mac
@@ -28,13 +16,17 @@ def mouse_callback(event, column, line, flags, params):
             # first point
             global img
             img = cv2.imread('./media/baboon.jpg', cv2.IMREAD_COLOR)
-            params["p1"] = [column, line]
+            params["p1"] = np.asarray([column, line])
             print ("p1: {}".format(params["p1"]))
         else:
             # second point
-            params["p2"] = [column, line]
-            params["line"] = cv2.line(img,tuple(params["p1"]),tuple(params["p2"]),(255,0,0),5)
-            print ("p2: {}".format(params["p2"]))
+            p1 = params["p1"]
+            p2 = np.asarray([column, line])
+            params["p2"] = p2
+            params["line"] = cv2.line(img,tuple(p1),tuple(p2),(255,0,0),3)
+            print ("p2: {}".format(p2))
+            dist = np.linalg.norm(p2-p1)
+            print("dist:{}".format(dist))
 
 while(1):
     cv2.imshow('window',img)
