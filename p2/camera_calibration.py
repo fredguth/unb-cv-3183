@@ -51,15 +51,15 @@ while (successes < n_boards):
   if ((frame % frame_step) ==0):      # skip frames
 
     # Find the chess board corners
-    # cv2.findChessboardCorners(image, patternSize[, corners[, flags]]) → retval, corners
+    cv2.findChessboardCorners(image, patternSize[, corners[, flags]]) → retval, corners
     #   image – Input image.
     #   patternSize – Number of inner corners per a chessboard (points_per_row, points_per_column) 
     #   corners – Array of detected corners
     # ret, corners = cv2.findChessboardCorners(gray, (board_h, board_w), None)
 
     # If found, refine points
-    # if ret == True:
-    if True:
+    if ret == True:
+    # if True:
       ret, image = capture.read()
       cv2.imshow("Raw", image)
       gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -71,17 +71,26 @@ while (successes < n_boards):
       #   criteria – Criteria for termination of the iterative process of corner refinement. That is, the process of corner position refinement stops either after criteria.maxCount iterations or when the corner position moves by less than criteria.epsilon on some iteration.
       #  https://docs.opencv.org/3.0-beta/modules/imgproc/doc/feature_detection.html
 
-      # refined_corners = cv2.cornerSubPix(gray, found, (11, 11), (-1, -1), criteria)
+      refined_corners = cv2.cornerSubPix(gray, found, (11, 11), (-1, -1), criteria)
       
       # Draw and display the corners
       # cv2.drawChessboardCorners(image, patternSize, corners, patternWasFound) → image
       #   image – Destination image. It must be an 8-bit color image.
       #   patternWasFound – Parameter indicating whether the complete board was found or not. The return value of findChessboardCorners() should be passed here.
 
-      # image = cv2.drawChessboardCorners(image, (board_h, board_w), refined_corners, ret)
-      cv2.imshow("Snapshot", gray_image)
-      cv2.moveWindow('Snapshot', 640, 43)
+      image = cv2.drawChessboardCorners(image, (board_h, board_w), refined_corners, ret)
       
+      if (found == board_total):
+        cv2.imshow("Snapshot", gray_image)
+        cv2.moveWindow('Snapshot', 640, 43)
+        step = sucesses*board_total
+        for j in range (0, board_total)
+          step+=1
+          image_points[step] = [corners[j].x, corners[j].y]
+          
+
+
+        
       # Handle pause/unpause ('Space') and stop ('ESC')
       k = cv2.waitKey(15)
       if k == 27:  # Esc -> Stop
