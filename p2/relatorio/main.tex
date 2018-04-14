@@ -1,0 +1,179 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+% \usepackage[OT1]{fontenc} 
+\usepackage[T1]{fontenc} 
+\usepackage{listings}
+% \usepackage[backend=bibtex,style=verbose-trad2]{biblatex}
+\lstset{language=bash,
+  numberstyle=\footnotesize,
+  basicstyle=\footnotesize,
+  numbers=left,
+  stepnumber=1,
+  frame=shadowbox,
+  breaklines=true}
+\usepackage{color}
+
+% \usepackage{tabularx,ragged2e,booktabs,caption}
+\usepackage{tabularx,ragged2e,booktabs}
+\newcolumntype{C}[1]{>{\Centering}m{#1}}
+\renewcommand\tabularxcolumn[1]{C{#1}}
+\usepackage[most]{tcolorbox}
+
+\usepackage[english,ngerman,brazilian]{babel}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+    
+\begin{document}
+
+\title{Projeto Demonstrativo 2 - Calibração de Câmeras}
+
+\author{\IEEEauthorblockN{Frederico Guth (18/0081641)}
+\IEEEauthorblockA{\textit{Tópicos em Sistemas de Computação, ,} \\
+\textit{Turma TC - Visão Computacional (PPGI)}\\
+\textit{Universidade de Brasília}\\
+Brasília, Brasil\\
+fredguth@fredguth.com}
+}
+
+\maketitle
+
+\begin{abstract}
+descrição curta do trabalho e do relatório, possivelmente indicando conclusões.
+\end{abstract}
+
+
+\section{Introdução e Objetivos}
+motivar o trabalho, apresentar de forma clara, porém sucinta, os objetivos do projeto demonstrativo e fazer uma breve revisão da bibliografia relacionada ao projeto.
+\subsection{Objetivos}
+OpenCV é uma importante biblioteca de código-aberto de rotinas para Visão Computacional\cite{forsyth}.  Patrocinada por grandes empresas como Intel, Nvidia e Google, tem como objetivo acelerar avanços na área, facilitando o acesso a algoritmos complexos\cite{opencv_library}. Tais características a tornam uma ferramenta essencial de aprendizado.
+
+\section{Metodologia}
+
+
+\subsection{Materiais}
+
+Foram utilizados o seguintes materiais:
+\begin{itemize}
+\item Computador MacBook Pro (Retina, 13-inch, Early 2015), Processador Intel Core i5 2,7 GHz, 8GB de RAM
+\item Python 3.6.3 :: Anaconda custom (64-bit)
+\item OpenCV 3.3.0
+\end{itemize}
+\subsection{Metodologia}
+Foram desenvolvidos 4 aplicações com crescentes graus de complexidade. 
+\subsection*{Aplicação 1}
+Esta aplicação abre um arquivo de imagem (tipo JPG) e quando o usuário clica em um ponto da tela, mostra no terminal a coordenada do ponto (linha, coluna) e os valores do pixel RGB, quando a imagem é colorida (por exemplo, a imagem venn.jpg) ou o valor da intensidade do pixel quando a imagem é em nível de cinza (por exemplo, a imagem venngray.jpg).
+\subsection*{Aplicação 2}
+Nesta aplicação, utilizamos o procedimento desenvolvido na \textit{Aplicação 1} e comparamos o valor da cor (ou tom de cinza) de todos os pixels da imagem com o valor do ponto de onde foi clicado. Se a diferença entre esses valores for menor que 13 tons, o pixel é marcado com a cor vermelha e o resultado exibido na tela. 
+
+No caso de imagens coloridas, para calcular essa diferença, usamos a distância Euclidiana no espaço cromático, i.e., dados os valores de vermelho (R), verde (G) e azul (B) do pixel que foi clicado:
+
+\[d(P_{1},P_2) = \sqrt{(R_1-R_2)^2+(G_1-G_2)^2+(B_1-B_2)^2}\]
+
+Para calcular a distância eficientemente, o recurso scipy.spatial.distance.cdist da biblioteca SciPy foi utilizado.  Pintar os pontos da imagem de vermelho é possível apenas com operações de matrizes.
+
+\subsection*{Aplicação 3}
+
+Foi repetido o procedimento desenvolido na \textit{Aplicação 2}, mas ao invés de abrir uma imagem, usou-se um arquivo de vídeo (padrão x264, mp4) e realizaram-se os mesmos procedimentos da \textit{Aplicação 2} para vídeo.
+
+Como o uso de vídeo impõe maior necessidade de processamento, mediu-se o tempo do procedimento de coloração.  Para comparação, um algoritmo ingênuo que usa \textit{forloop} ao invés de operações com matrizes foi desenvolvido e os seus tempos também medidos.
+
+\subsection*{Aplicação 4}
+Foi repetido o procedimento desenvolvido na Aplicação 3, mas ao invés de abrir um arquivo de vídeo, a aplicação abre o streaming de vídeo de uma webcam ou câmera USB conectada ao computador.
+\section{Resultados}
+\subsection*{Aplicação 1}
+Para facilitar a análise dos resultados, foram usadas imagens com cores bem nítidas.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=0.28\columnwidth]{venn.png}
+% \caption{Imagem do arquivo venn.jpg}
+\end{center}
+\end{figure}
+\begin{lstlisting}[language=bash]
+$> python requisito1.py
+(line, column):(179,125); BGR ([ 94 166 0]); RGB ([0, 166, 94])
+\end{lstlisting}
+
+Usando OpenCv, facilmente é possível abrir uma imagem e transformá-la em uma matriz e imprimir seu valor na tela.
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=0.28\columnwidth]{venn_gray.png}
+% \caption{Imagem do arquivo venn\_gray.jpg}
+\end{center}
+\end{figure}
+
+Com a mesma facilidade é possível abrir uma imagem em níveis de cinza.
+
+\begin{lstlisting}[language=bash]
+$> python requisito1.py
+(line, column):(178,129); Luminosity (122)
+\end{lstlisting}
+\subsection*{Aplicação 2}
+Com imagens coloridas e em tons de cinza, a \textit{Aplicação 2} colore o ponto clicado de vermelho.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=0.28\columnwidth]{requisito2_color.png}
+% \caption{Coloração de uma imagem RGB}
+\end{center}
+\end{figure}
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=0.28\columnwidth]{requisito2_gray.png}
+% \caption{Coloração de uma imagem Grayscale}
+\end{center}
+\end{figure}
+\subsection*{Aplicação 3}
+O uso de vídeo impõe maior necessidade de eficiência no processamento. Usando um vídeo pequeno (180 x 320, em padrão x.264), a Aplicação 3 funciona sem problemas.
+
+A Tabela I compara a mediana do tempo da coloração usando operação de matrizes em relação a uma abordagem ingênua com \textit{forloop}:
+
+\begin{minipage}{\linewidth}
+\centering
+% \captionof{table}{Processamento da Coloração} \label{tab:title} 
+\begin{tabular}{ C{.755in} C{.85in} *4{C{.75in}}}\toprule[1.5pt]
+\bf Algoritmo & \bf Mediana ms/frame  \bf \\\midrule
+Matrizes        &  3.37 \\
+ForLoop        &  1615.26 \\
+\bottomrule[1.25pt]
+\end {tabular}\par
+
+\end{minipage}
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=0.66\columnwidth]{toy.png}
+% \caption{Coloração de vídeo}
+\end{center}
+\end{figure}
+
+
+\subsection*{Aplicação 4}
+Com OpenCV, usar a imagem \textit{stream} da webcam ao invés de um arquivo de vídeo é trivial.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=0.66\columnwidth]{cam.png}
+% \caption{Coloração do \textit{stream} da webcam}
+\end{center}
+\end{figure}
+
+\section{Resultados}
+Nesta parte são apresentados os resultados das implementações efetuadas, na forma de tabelas e gráficos, sem que se esqueça de identificar em cada caso os parâmetros utilizados.
+\section{Discussão e Conclusões}
+OA discussão visa comparar os resultados obtidos e os previstos pela teoria. Deve se justificar eventuais discrepâncias observadas. As conclusões resumem a atividade de laboratório e destacam os principais resultados e aplicações dos conceitos vistos.
+\begin{itemize}
+\item Poderíamos utilizar uma abordagem multiprocessada e mover o processamento da coloração para uma thread separada da leitura dos frames do vídeo.
+\item Poderíamos usar a OpenCV para converter os frames de vídeo para o espaço de cores HSL e checar a similaridade dos pixels nesse outro espaço.
+\end{itemize}
+Nenhuma dessas ideias, entretanto, faziam parte do escopo do projeto e ficam como sugestão para novas pesquisas.
+
+\selectlanguage{brazilian}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

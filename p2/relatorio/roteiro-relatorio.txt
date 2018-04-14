@@ -1,0 +1,36 @@
+O relatório deve demonstrar que a respectiva atividade de laboratório foi realizada com sucesso e que os princípios subjacentes foram compreendidos.
+
+
+O relatório da atividade de projeto demonstrativo é o documento gerado a partir do trabalho realizado seguindo as orientações exigidas na metodologia para se atender ao requisito solicitado. Este deve espelhar todo o trabalho desenvolvido nos processos de obtenção dos dados e sua análise. Apresentamos a seguir uma recomendação de organização para o relatório da atividade de laboratório. Deverá conter as seguintes partes:
+
+
+i. Identificação: Possuir a indicação clara do título do projeto demonstrativo abordado, a data da sua realização, a identificação da disciplina/turma, nome do autor, e quando houver, número de matrícula e email.
+
+ii. Resumo: descrição curta do trabalho e do relatório, possivelmente indicando conclusões. 
+
+iii. Introdução e Objetivos: motivar o trabalho, apresentar de forma clara, porém sucinta, os objetivos do projeto demonstrativo e fazer uma breve revisão da bibliografia relacionada ao projeto.
+
+iv. Metodologia: deve conter a teoria necessária à realização da atividade do projeto demonstrativo proposto. Descreva os métodos usando notação matemática ou algoritmos. Não insira código fonte, seu relatório deve ser independente da linguagem de programação utilizada. Apresente materiais e equipamentos utilizados, descrição do arranjo experimental e uma exposição minuciosa do procedimento do projeto demonstrativo realmente adotado. Porém, deixe detalhes sobre o código, instalação e execução dos programas num arquivo read_me.txt, que deve se localizar no diretório "raiz" da sua submissão. 
+
+v. Resultados: Nesta parte são apresentados os resultados das implementações efetuadas, na forma de tabelas e gráficos, sem que se esqueça de identificar em cada caso os parâmetros utilizados.
+
+vi. Discussão e Conclusões: A discussão visa comparar os resultados obtidos e os previstos pela teoria. Deve se justificar eventuais discrepâncias observadas. As conclusões resumem a atividade de laboratório e destacam os principais resultados e aplicações dos conceitos vistos.
+
+vii. Bibliografia: Citar as fontes consultadas, respeitando as regras de apresentação de bibliografia (autor, título, editora, edição, ano, página de início e fim). Use BIB files no LaTeX, e tenha atenção para ver se a compilacao (bibtex) gera algum warning, se há campos faltando ou campos redundantes. Utilize sempre fontes bibliográficas confiáveis (livros e artigos científicos). Caso a melhor referência seja uma página da Wikipedia, verificar as referências que essa página cita e selecionar as mais relevantes. Caso voce realmente precise citar a Wikipedia (por exemplo, quando você reproduz uma figura de lá), cite especificamente a versão usada (na wikipedia isso eh indexado por data e hora). Caso você queira citar um repositório com controle de versão (como o Git), cite a versão do commit e sua data. No caso de citações de webpages sem autores e sem controle de versão, indique quando você acessou-as.
+
+O relatório do laboratório deverá ser confeccionado em editor eletrônico de textos com no máximo 4 (quatro) páginas, utilizando obrigatoriamente o padrão de formatação descrito no arquivo de exemplo disponibilizado aqui. Está disponibilizado um padrão para editores científicos LATEX (arquivo extensão *.zip contendo arquivo de exemplo do uso do pacote), cabendo ao aluno a escolha de qual editor/IDE será utilizado. Não serão permitidos relatórios confeccionados em outro editor eletrônico de texto, ou usando um modelo diferente do padrão LaTeX disponibilizado.
+
+Instruções para Submissão da atividade de Projeto Demonstrativo
+Esta tarefa consiste na submissão de um arquivo único Zipado, contendo um arquivo PDF do relatório elaborado e também o código fonte desenvolvido, obrigatoriamente em C/C++ ou Python, e um arquivo com diretivas de compilação em Linux. 
+
+Inclua somente:
+
+Código fonte dos seus programas;
+Scripts (por exemplo, Makefile, shell, etc, quando existirem);
+PDF do seu relatório;
+Código fonte do relatório (arquivos .tex, .bib, .sty, imagens incluídas);
+Imagens (<1MB) ou videos (<5MB) que você tenha usado no seu relatório.
+Não incluir:
+
+Arquivos compilados nem arquivos auxiliares (object files, arquivos temporários do LaTeX, etc),
+Imagens e video que eu ja forneci no pacote.
