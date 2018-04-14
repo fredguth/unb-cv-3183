@@ -42,6 +42,7 @@ def dist(img, point):
 # ==============================================
 
 video = cv2.VideoCapture('./media/monicatoy.mp4')
+cv2.namedWindow("video")
 
 ret, frame = video.read()
 lines, columns, channels =  (frame.shape)
