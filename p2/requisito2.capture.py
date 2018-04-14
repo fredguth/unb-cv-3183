@@ -9,14 +9,15 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 
 capture = cv2.VideoCapture(0)
-capture.set(3, 640)
-capture.set(4, 360)
+# capture.set(3, 640)
+# capture.set(4, 360)
 cv2.namedWindow("Snapshot")
 cv2.namedWindow("Raw")
 snapshot = None
 count = 0
 while True:
   ret, image = capture.read()
+  image = cv2.flip( image, 1)  # mirrors image
   gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
   cv2.imshow("Raw", image)
   if count:
@@ -34,5 +35,5 @@ while True:
     print (filename)
     cv2.imwrite(filename, gray_image)
  
-os.chdir(root)   
+
 cv2.destroyAllWindows()
