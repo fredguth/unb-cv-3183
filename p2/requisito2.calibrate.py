@@ -77,7 +77,8 @@ intrinsic [1,1] = 1
 #   tvecs – Output vector of translation vectors estimated for each pattern view.
 ret, intrinsic, distCoeff, rvecs, tvecs = cv2.calibrateCamera(object_points, image_points, gray_image.shape[::-1],cv2.CALIB_USE_INTRINSIC_GUESS,criteria)
 
-
+print ("rvecs", rvecs)
+print ("tvecs", tvecs)
 # check reprojection error
 total_error = 0
 for i in range(0, len(object_points)):
@@ -88,9 +89,16 @@ for i in range(0, len(object_points)):
 print ("mean error: {} pixels ".format(total_error/len(object_points)))
 
 
-
 print("Storing Intrinsics and Distortions files...\n")
+print(intrinsic)
+fs_write = cv2.FileStorage('Intrinsics.xml',cv2.FILE_STORAGE_WRITE)
+fs_write.write('Intrinsics', intrinsic)
+fs_write.release()
 
-np.save('Intrinsics', intrinsic)
-np.save('Distortion', distCoeff)
+fs_write = cv2.FileStorage('Distortion.xml', cv2.FILE_STORAGE_WRITE)
+fs_write.write('DistCoeffs', distCoeff)
+fs_write.release()
+
+# np.save('Intrinsics', intrinsic)
+# np.save('Distortion', distCoeff)
 
