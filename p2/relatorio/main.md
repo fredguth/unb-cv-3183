@@ -2,7 +2,7 @@ main.md
 
 #Introdução
 
-Uma câmera é um instrumento de aquisição de imagens. Conhecendo seus parâmetros intrínsecos, como distância focal e distorção da lente, e extrínsecos, sua rotação e translação no sistema de coordenadas do mundo real, é possível estimar a posição 3D de um objeto na imagem[tese], o que possibilita diversas aplicações: por exemplo, a mensuração da altura de pessoas a partir de vídeos de camêras de segurança ou a estimativas de posições de atletas em campo, entre outras.
+Uma câmera é um instrumento de aquisição de imagens. Conhecendo seus parâmetros intrínsecos, como distância focal e distorção da lente, e extrínsecos, sua rotação e translação no sistema de coordenadas do mundo real, é possível estimar a posição 3D de um objeto a partir de sua imagem[tese], o que possibilita diversas aplicações: por exemplo, a mensuração da altura de pessoas registradas em vídeos de camêras de segurança ou a estimativas de posições de atletas em campo, entre outras.
 
 ##Objetivos
 Os objetivos deste projeto são a aplicação prática da teoria de calibração de câmeras e o desenvolvimento de uma "régua visual", capaz de medir um objeto através da sua imagem.
@@ -21,9 +21,11 @@ Os objetivos deste projeto são a aplicação prática da teoria de calibração
 O modelo de câmera estenopeica (pinhole) faz um mapeamento geométrico do mundo 3D para o plano da imagem 2D.[Unicamp]
 imagem, f, alpha, px, py [Qut]
 
-Se os pontos do mundo (X) e da imagem (x) são representados por coordenadas homogêneas, podemos expressar matematicamente a projeção da câmera como uma matriz[Livro]:
+Se os pontos do mundo (X) e da imagem (x) são representados por coordenadas homogêneas, podemos expressar matematicamente a projeção da câmera como uma matriz[Tese]:
 
-x = PX
+lambdax = PX,
+
+onde lambda é um fator de escala e P é a matriz 3x4 de projeção, também chamada matriz de calibração.
 
 Sendo X coordenadas euclidianas, P pode ser decomposto em duas entidades geométricas: os parâmetros intrísecos e extrísecos de calibração [tese]
 
@@ -35,6 +37,15 @@ K = (fI|po);
 
 e os extrínsecos são a rotação e translação que transformam pontos no espaço do objeto para pontos no espaço da imagem e vice-versa. [tese]
 
+Como há 6 graus de liberdade nos parâmetros extrínsecos e 5 nos intrísecos, é necessário pelo menos 6 correspondências {xi <-> Xi} do mesmo ponto no espaço da imagem e no espaço do objeto para obter P [tese]. 
+
+Como há um erro inerente nas medidas experimentais, para melhorar a qualidade da estimativa é preciso usar n > 6 correspondências (como será visto na seção ..., usaremos 48). Como não há uma única matriz P que resolve esse sistema de equações é adcionar restrições.  
+
+Um método comum é adicionar a restrição p34 = 0[tese, livro], mas essa abordagem não garante que não existam configurações em que o resultado com a restrição adicional é degenerado. Uma melhor melhor abordagem[tese] é fazer:
+P = arg min....
+onde d(xi ,P'Xi) é a distancia euclidiana entre o ponto observado e o estimado.
+
+A biblioteca OpenCV usa essa última abordagem e aplica o método Levenberg-Marquant para resolver a minimização. 
 ## Parâmetros extrínsecos em função dos intrísecos e da matriz de calibração
 
 Os parâmetros extrínsecos podem ser calculados a partir do conhecimento de P, K.  Isso será útil na seção [Metodologia] e, portanto, descrevemos aqui um método.
