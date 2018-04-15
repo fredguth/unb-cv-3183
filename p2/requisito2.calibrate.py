@@ -78,7 +78,9 @@ intrinsic [1,1] = 1
 #   rvecs – Output vector of rotation vectors (see Rodrigues() ) estimated for each pattern view. That is, each k-th rotation vector together with the corresponding k-th translation vector (see the next output parameter description) brings the calibration pattern from the model coordinate space (in which object points are specified) to the world coordinate space, that is, a real position of the calibration pattern in the k-th pattern view (k=0.. M -1).
 #   tvecs – Output vector of translation vectors estimated for each pattern view.
 ret, intrinsic, distCoeff, rvecs, tvecs = cv2.calibrateCamera(object_points, image_points, gray.shape[::-1],cv2.CALIB_USE_INTRINSIC_GUESS,criteria)
-
+h,  w = gray.shape[:2]
+newcameraintrinsic, roi = cv2.getOptimalNewCameraMatrix(
+        intrinsic, distCoeff, (w, h), 1, (w, h))
 
 # check reprojection error
 total_error = 0
@@ -91,9 +93,9 @@ print ("mean error: {} pixels ".format(total_error/len(object_points)))
 
 
 print("Storing Intrinsics and Distortions files...\n")
-print(intrinsic)
+# print(intrinsic)
 fs_write = cv2.FileStorage('Intrinsics.xml',cv2.FILE_STORAGE_WRITE)
-fs_write.write('Intrinsics', intrinsic)
+fs_write.write('Intrinsics', newcameraintrinsic)
 fs_write.release()
 
 fs_write = cv2.FileStorage('Distortion.xml', cv2.FILE_STORAGE_WRITE)

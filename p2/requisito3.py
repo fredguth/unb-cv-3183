@@ -14,13 +14,15 @@ board_h = 6  # vertical enclosed corners on chessboard
 
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
+R = None
+t = None
 
 exp = input("Please enter experiment number: ")
 cwd = os.getcwd()
 directory = cwd + '/exp-'+exp
 if not os.path.exists(directory):
     os.makedirs(directory)
-square = float(input("Please enter size of a chessboard square in mm:"))
+square = float(input("Please enter size of a chessboard square in cm:"))
 count = 0
 
 capture = cv2.VideoCapture(0)
@@ -64,7 +66,8 @@ def drawLine (img, data, color):
         cv2.line(img,tuple(p1),tuple(p2),color,2)
         print ("p1, p2: {}, {}".format(p1, p2))
         dist = np.linalg.norm(p2-p1)
-        h, w, c = img.shape
+        print (img.shape)
+        h, w= img.shape
         cv2.putText(img,"{} pixels".format(dist),(10,h-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5,color,1,cv2.LINE_AA)
         print("dist:{}".format(dist))           
     return img
@@ -73,8 +76,8 @@ def calculateExtrinsics(image, exp, count):
     object_points = np.zeros((board_h*board_w, 3), np.float32)
     object_points[:, :2] = np.mgrid[0:board_w, 0:board_h].T.reshape(-1, 2)*square
 
-    print('object_points')
-
+    global R
+    global t
     found, corners = cv2.findChessboardCorners(
         image, (board_w, board_h), cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FILTER_QUADS)
     # If found corners, refine
@@ -85,14 +88,12 @@ def calculateExtrinsics(image, exp, count):
         # cv2.solvePnPRansac(objectPoints, imagePoints, cameraMatrix, distCoeffs[, rvec[, tvec[, useExtrinsicGuess[, iterationsCount[, reprojectionError[, minInliersCount[, inliers[, flags]]]]]]]])
         ret, r, t, inliners = cv2.solvePnPRansac(object_points, corners, intrinsic, distCoeff)
         R, j = cv2.Rodrigues(r)
-        print ('R:', R)
-        print ('t:', t)
-
-    
+        
+   
     image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
     image = cv2.drawChessboardCorners(
          image, (board_w, board_h), corners, found)
-    cv2.imshow('Chess', image)
+    return image
 
 while(capture.isOpened()):
     _, image = capture.read()    
@@ -104,9 +105,9 @@ while(capture.isOpened()):
     #undistort
     dst = cv2.undistort(image, intrinsic, distCoeff, None, newcameraintrinsic)
 
-    # crop the image
-    x,y,w,h = roi
-    dst = dst[y:y+h, x:x+w]
+    # # crop the image
+    # x,y,w,h = roi
+    # dst = dst[y:y+h, x:x+w]
     cv2.setMouseCallback('Raw',mouse_callback, raw)
     cv2.setMouseCallback('Undistorted',mouse_callback, undistorted)
 
@@ -115,19 +116,21 @@ while(capture.isOpened()):
     cv2.imshow('Raw', image)
     
     dst = drawLine(dst, undistorted, (255,33,255))
+    dst = calculateExtrinsics(dst, exp, count)
     cv2.imshow('Undistorted', dst)
     
     k = cv2.waitKey(60) & 0xFF
     if k==27:    # Esc key to stop
         break
     if k == 32:  # Space -> snapshot
-        count += 1
-        filename = directory + '/snap-{}-{}.png'.format(exp, count)
-        print(filename)
-        cv2.imwrite(filename, dst)
-        calculateExtrinsics(dst, exp, count)
+        # count += 1
+        # filename = directory + '/snap-{}-{}.png'.format(exp, count)
+        # print(filename)
+        # cv2.imwrite(filename, dst)
+        
+        C = np.matmul(np.linalg.inv(R), t)
+        print ("C", C)
+        
 
 capture.release()
 cv2.destroyAllWindows()
-
-t = -R 
