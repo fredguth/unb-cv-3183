@@ -63,8 +63,8 @@ while(capture.isOpened()):
     dst = cv2.undistort(image, intrinsic, distCoeff, None, newcameraintrinsic)
 
     # crop the image
-    x,y,w,h = roi
-    dst = dst[y:y+h, x:x+w]
+    # x,y,w,h = roi
+    # dst = dst[y:y+h, x:x+w]
     cv2.setMouseCallback('Raw',mouse_callback, raw)
     cv2.setMouseCallback('Undistorted',mouse_callback, undistorted)
 

@@ -73,23 +73,26 @@ def calculateExtrinsics(image, exp, count):
     object_points = np.zeros((board_h*board_w, 3), np.float32)
     object_points[:, :2] = np.mgrid[0:board_w, 0:board_h].T.reshape(-1, 2)*square
 
+    print('object_points')
+
     found, corners = cv2.findChessboardCorners(
         image, (board_w, board_h), cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FILTER_QUADS)
     # If found corners, refine
     if found == True:
         corners = cv2.cornerSubPix(
             image, corners, (11, 11), (-1, -1), criteria)
-    image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-
-    image = cv2.drawChessboardCorners(
-        image, (board_w, board_h), corners, found)
     
-    cv2.imshow('Chess', image)
+        # cv2.solvePnPRansac(objectPoints, imagePoints, cameraMatrix, distCoeffs[, rvec[, tvec[, useExtrinsicGuess[, iterationsCount[, reprojectionError[, minInliersCount[, inliers[, flags]]]]]]]])
+        ret, r, t, inliners = cv2.solvePnPRansac(object_points, corners, intrinsic, distCoeff)
+        R, j = cv2.Rodrigues(r)
+        print ('R:', R)
+        print ('t:', t)
 
-    # cv2.solvePnPRansac(objectPoints, imagePoints, cameraMatrix, distCoeffs[, rvec[, tvec[, useExtrinsicGuess[, iterationsCount[, reprojectionError[, minInliersCount[, inliers[, flags]]]]]]]])
-    ret, r, t, inliners = cv2.solvePnPRansac(object_points, corners, intrinsic, distCoeff)
-    cv.Rodrigues2(r, R, jacobian=0)
-    print ('R:', R)
+    
+    image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+    image = cv2.drawChessboardCorners(
+         image, (board_w, board_h), corners, found)
+    cv2.imshow('Chess', image)
 
 while(capture.isOpened()):
     _, image = capture.read()    
@@ -126,3 +129,5 @@ while(capture.isOpened()):
 
 capture.release()
 cv2.destroyAllWindows()
+
+t = -R 

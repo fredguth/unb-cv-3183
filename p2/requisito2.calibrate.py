@@ -25,18 +25,20 @@ image_points  = []  # 2d points in image plane.
 
 exp = input("Please enter experiment number: ")
 images = glob.glob('./exp-{}/s*.png'.format(exp))
-
+gray = None
 for fname in images:
     image = cv2.imread(fname)
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
+    gray = gray_image
     # Find the chess board corners
     # cv2.findChessboardCorners(image, patternSize[, corners[, flags]]) → retval, corners
     #   image – Input image.
     #   patternSize – Number of inner corners per a chessboard (points_per_row, points_per_column) 
     #   corners – Array of detected corners
 
-    found, corners = cv2.findChessboardCorners(gray_image, (board_w, board_h), cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FILTER_QUADS)
+    #found, corners = cv2.findChessboardCorners(gray_image, (board_w, board_h), cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FILTER_QUADS)
+    found, corners = cv2.findChessboardCorners(
+        gray_image, (board_w, board_h), None)
 
     # If found corners, refine
     if found == True:
@@ -75,10 +77,9 @@ intrinsic [1,1] = 1
 #   distCoeffs – Output vector of distortion coefficients (k_1, k_2, p_1, p_2[, k_3[, k_4, k_5, k_board_h],[s_1, s_2, s_3, s_4]]) of 4, 5, 8 or 12 elements.
 #   rvecs – Output vector of rotation vectors (see Rodrigues() ) estimated for each pattern view. That is, each k-th rotation vector together with the corresponding k-th translation vector (see the next output parameter description) brings the calibration pattern from the model coordinate space (in which object points are specified) to the world coordinate space, that is, a real position of the calibration pattern in the k-th pattern view (k=0.. M -1).
 #   tvecs – Output vector of translation vectors estimated for each pattern view.
-ret, intrinsic, distCoeff, rvecs, tvecs = cv2.calibrateCamera(object_points, image_points, gray_image.shape[::-1],cv2.CALIB_USE_INTRINSIC_GUESS,criteria)
+ret, intrinsic, distCoeff, rvecs, tvecs = cv2.calibrateCamera(object_points, image_points, gray.shape[::-1],cv2.CALIB_USE_INTRINSIC_GUESS,criteria)
 
-print ("rvecs", rvecs)
-print ("tvecs", tvecs)
+
 # check reprojection error
 total_error = 0
 for i in range(0, len(object_points)):
