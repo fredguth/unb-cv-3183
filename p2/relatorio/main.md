@@ -9,11 +9,11 @@ Os objetivos deste projeto são a aplicação prática da teoria de calibração
 
  Mais especificamente deseja-se que sejam desenvolvidos programas usando a biblioteca OpenCV capazes de:
 
-1) medir um segmento de reta em imagens através de cliques de mouse
+<!-- 1) medir um segmento de reta em imagens através de cliques de mouse
 2) realizar a calibração de uma câmera digital, armazenando os parâmetros intrísecos e os coeficientes de distorções em arquivos XML.
 3) realizar a calibração de uma câmera digital a partir de diferentes distâncias da câmera, calculando os parâmetros extrínsecos da mesma e avaliando a diferença dos resultados
 4) Com os parâmetros intrísecos e extrínsecos conhecidos, medir um objeto através de sua imagem e comparar com suas dimensões reais
-5) Analisar os resultados obtidos
+5) Analisar os resultados obtidos -->
 
 #Revisão Teórica
 
@@ -46,7 +46,7 @@ P = arg min....
 onde d(xi ,P'Xi) é a distancia euclidiana entre o ponto observado e o estimado.
 
 A biblioteca OpenCV usa essa última abordagem e aplica o método Levenberg-Marquant para resolver a minimização. 
-## Parâmetros extrínsecos em função dos intrísecos e da matriz de calibração
+<!-- ## Parâmetros extrínsecos em função dos intrísecos e da matriz de calibração
 
 Os parâmetros extrínsecos podem ser calculados a partir do conhecimento de P, K.  Isso será útil na seção [Metodologia] e, portanto, descrevemos aqui um método.
 
@@ -62,7 +62,7 @@ r3 = r1 x r2
 t = 1/lambda K -1 p3
 [Unicamp]
 
-onde lambda = ||K -1 p1 || = ||K -1 p2||
+onde lambda = ||K -1 p1 || = ||K -1 p2|| -->
 
 ##distorção radial e tangencial
 

@@ -21,18 +21,12 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{tese}
-T.~de~Campos, ``3d visual tracking of articulated objects and hands,'' Ph.D.
-  dissertation, University of Oxford, 2014.
+\bibitem{opencv_library}
+G.~Bradski, ``{The OpenCV Library},'' \emph{Dr. Dobb's Journal of Software
+  Tools}, 2000.
 
-\bibitem{unicamp}
-M.~Santos, ``{Revisão de Conceitos em Projeção, Homografia, Calibração de
-  Câmera, Geometria Epipolar, Mapas de Profundidade e Varredura de Planos},''
-  Unicamp, Tech. Rep., 2012.
-
-\bibitem{Hartley2004}
-R.~I. Hartley and A.~Zisserman, \emph{Multiple View Geometry in Computer
-  Vision}, 2nd~ed.\hskip 1em plus 0.5em minus 0.4em\relax Cambridge University
-  Press, ISBN: 0521540518, 2004.
+\bibitem{forsyth}
+D.~Forsyth and J.~Ponce, \emph{Computer vision: a modern approach}.\hskip 1em
+  plus 0.5em minus 0.4em\relax Pearson, 2011.
 
 \end{thebibliography}
