@@ -21,12 +21,12 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{forsyth}
-D.~Forsyth and J.~Ponce, \emph{Computer vision: a modern approach}.\hskip 1em
-  plus 0.5em minus 0.4em\relax Pearson, 2011.
-
 \bibitem{opencv_library}
 G.~Bradski, ``{The OpenCV Library},'' \emph{Dr. Dobb's Journal of Software
   Tools}, 2000.
+
+\bibitem{forsyth}
+D.~Forsyth and J.~Ponce, \emph{Computer vision: a modern approach}.\hskip 1em
+  plus 0.5em minus 0.4em\relax Pearson, 2011.
 
 \end{thebibliography}
