@@ -1,11 +1,10 @@
 import numpy as np
 import cv2
+import os
 
 
 board_w = 8  # horizontal enclosed corners on chessboard
 board_h = 6  # vertical enclosed corners on chessboard
-
-
 
 R = None
 t = None
@@ -13,6 +12,8 @@ distance = 0
 
 exp = input("Please enter from which experiment you want to calibrate: ")
 
+cwd = os.getcwd()
+directory = cwd + '/exp-'+exp
 
 fs_read = cv2.FileStorage('./exp-{}/Intrinsics.xml'.format(exp), cv2.FILE_STORAGE_READ)
 intrinsic = fs_read.getNode('Intrinsics').mat()
@@ -40,6 +41,10 @@ undistorted = {
     "p1": np.asarray([-1, -1]),
     "p2": np.asarray([-1, -1])
 }
+
+saving = False
+goodResult = False
+criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 def mouse_callback(event, column, line, flags, params):
     
@@ -115,36 +120,39 @@ def calculateExtrinsicsNovo(image, exp, count):
     image = cv2.drawChessboardCorners(
          image, (board_w, board_h), corners, found)
     return image
+
 def calculateExtrinsics(image, exp, count):
+    
     object_points = np.zeros((board_h*board_w, 3), np.float32)
     object_points[:, :2] = np.mgrid[0:board_w, 0:board_h].T.reshape(-1, 2)*square
 
     global R
     global t
     global distance
+    global goodResult
     found, corners = cv2.findChessboardCorners(
         image, (board_w, board_h), cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE)
     # If found corners, refine
     if found == True:
         corners = cv2.cornerSubPix(
             image, corners, (11, 11), (-1, -1), criteria)
-    
-        # cv2.solvePnPRansac(objectPoints, imagePoints, cameraMatrix, distCoeffs[, rvec[, tvec[, useExtrinsicGuess[, iterationsCount[, reprojectionError[, minInliersCount[, inliers[, flags]]]]]]]])
-        # ret, r, t, inliners = cv2.solvePnPRansac(object_points, corners, intrinsic, distCoeff,None, None, True, 500, )
-        print (corners)
-        ret, rvec, t = cv2.solvePnP(object_points, corners, intrinsic,
-                                 distCoeff, None, None, False, cv2.SOLVEPNP_ITERATIVE)
-        
-        
-        R, j = cv2.Rodrigues(rvec)
-        # C = np.matmul(np.linalg.inv(-R), t)
-        # distance = np.linalg.norm(C)
-        distance = np.linalg.norm(t)
-        
-   
-    image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-    image = cv2.drawChessboardCorners(
-         image, (board_w, board_h), corners, found)
+        if (corners.shape[0]==48):
+            goodResult = True
+            # cv2.solvePnPRansac(objectPoints, imagePoints, cameraMatrix, distCoeffs[, rvec[, tvec[, useExtrinsicGuess[, iterationsCount[, reprojectionError[, minInliersCount[, inliers[, flags]]]]]]]])
+            # ret, r, t, inliners = cv2.solvePnPRansac(object_points, corners, intrinsic, distCoeff,None, None, True, 500, )
+            
+            ret, rvec, t = cv2.solvePnP(object_points, corners, intrinsic,
+                                    distCoeff, None, None, False, cv2.SOLVEPNP_ITERATIVE)
+            
+            
+            R, j = cv2.Rodrigues(rvec)
+            C = np.matmul(np.linalg.inv(-R), t)
+            distance = np.linalg.norm(C)
+            # distance = np.linalg.norm(t)
+            
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+            image = cv2.drawChessboardCorners(
+                image, (board_w, board_h), corners, found)
     return image
 
 while(capture.isOpened()):
@@ -169,23 +177,25 @@ while(capture.isOpened()):
     
     dst = drawLine(dst, undistorted, (255,33,255))
     dst = calculateExtrinsics(dst, exp, count)
-    h, w, c = dst.shape
+
+    if (dst.size>640*480):
+        h, w, c = dst.shape
+    else:
+         h, w = dst.shape
     cv2.putText(dst, "Distance:{} cm".format(distance), (w-200, 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (33, 255, 33), 1, cv2.LINE_AA)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (33, 33, 255), 1, cv2.LINE_AA)
     cv2.imshow('Undistorted', dst)
-    
+
     k = cv2.waitKey(60) & 0xFF
     if k==27:    # Esc key to stop
         break
     if k == 32:  # Space -> snapshot
-        # count += 1
-        # filename = directory + '/snap-{}-{}.png'.format(exp, count)
-        # print(filename)
-        # cv2.imwrite(filename, dst)
-        
-        C = np.matmul(np.linalg.inv(R), t)
-        print ("C", C)
-        
+        saving = not saving
 
+    if saving and goodResult:
+        count += 1
+        goodResult = False
+        filename = directory + '/extr-{}-{}.png'.format(exp, count)
+        cv2.imwrite(filename, dst)
 capture.release()
 cv2.destroyAllWindows()
