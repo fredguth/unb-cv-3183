@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  17 APR 2018 09:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  17 APR 2018 12:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -740,24 +740,24 @@ Language: portuges 2008/03/18 v1.2q Portuguese support from the babel system
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 16.
  (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    ... okay on input line 16.
 
 -- Lines per column: 56 (exact).
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -822,24 +822,13 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Try loading font information for U+msa on input line 30.
-
-(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 30.
-
-(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 30.
+Underfull \hbox (badness 1565) in paragraph at lines 34--36
+[]\OT1/ptm/b/it/9 Index Terms\OT1/ptm/b/n/9 ---c[]ameras, calibra[][]ao, par[]a
+metros intr[]^^Psecos,
+ []
 
 
-LaTeX Warning: Citation `tese' on page 1 undefined on input line 40.
-
-
-Underfull \hbox (badness 5231) in paragraph at lines 42--43
+Underfull \hbox (badness 5231) in paragraph at lines 41--42
 []\OT1/ptm/m/n/10 Isto pos-si-bi-lita di-ver-sas aplica[][]oes: por exem-plo, a
 
  []
@@ -847,55 +836,97 @@ Underfull \hbox (badness 5231) in paragraph at lines 42--43
 <pinhole.png, id=1, 602.25pt x 424.58624pt>
 File: pinhole.png Graphic file (type png)
  <use pinhole.png>
-Package pdftex.def Info: pinhole.png used on input line 61.
+Package pdftex.def Info: pinhole.png used on input line 60.
 (pdftex.def)             Requested size: 189.0pt x 133.2465pt.
+LaTeX Font Info:    Try loading font information for U+msa on input line 65.
 
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 65.
 
-LaTeX Warning: Citation `docsopencv' on page 1 undefined on input line 62.
-
-
-LaTeX Warning: Citation `tese' on page 1 undefined on input line 66.
-
-
-LaTeX Warning: Citation `tese' on page 1 undefined on input line 72.
-
-
-LaTeX Warning: Citation `Hartley2004' on page 1 undefined on input line 79.
-
-
-Underfull \hbox (badness 3623) in paragraph at lines 81--82
+(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+Underfull \hbox (badness 3623) in paragraph at lines 80--81
 []\OT1/ptm/m/n/10 Os par[]ametros intr[]^^Psecos de calibra[][]ao des-cre-vem a
 
  []
 
-
-LaTeX Warning: Citation `tese' on page 1 undefined on input line 89.
-
-
-LaTeX Warning: Citation `tese' on page 1 undefined on input line 91.
-
-
-LaTeX Warning: Citation `Hartley2004' on page 1 undefined on input line 95.
-
-
-LaTeX Warning: Citation `tese' on page 1 undefined on input line 95.
-
 [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
- <./pinhole.png>]
+ <./pinhole.png>] <distortion.png, id=18, 1115.16624pt x 429.605pt>
+File: distortion.png Graphic file (type png)
 
-LaTeX Warning: Citation `docsopencv' on page 2 undefined on input line 112.
-
-
-LaTeX Warning: Citation `OpenCV' on page 2 undefined on input line 160.
-
-
-Underfull \hbox (badness 3769) in paragraph at lines 165--166
+<use distortion.png>
+Package pdftex.def Info: distortion.png used on input line 109.
+(pdftex.def)             Requested size: 252.0pt x 97.07648pt.
+ [2 <./distortion.png>]
+Underfull \hbox (badness 3769) in paragraph at lines 167--168
 []\OT1/ptm/m/n/10 Repete-se o passo an-te-rior, ten-tando en-con-trar a
  []
 
-[2] (./main.bbl)
+<baboon.jpg, id=26, 321.2pt x 241.90375pt>
+File: baboon.jpg Graphic file (type jpg)
+ <use baboon.jpg>
+Package pdftex.def Info: baboon.jpg used on input line 181.
+(pdftex.def)             Requested size: 126.0pt x 94.89206pt.
+
+<snap-1.png, id=27, 642.4pt x 481.8pt>
+File: snap-1.png Graphic file (type png)
+ <use snap-1.png>
+Package pdftex.def Info: snap-1.png used on input line 191.
+(pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
+
+<snap-2.png, id=28, 642.4pt x 481.8pt>
+File: snap-2.png Graphic file (type png)
+ <use snap-2.png>
+Package pdftex.def Info: snap-2.png used on input line 194.
+(pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
+
+<snap-3.png, id=29, 642.4pt x 481.8pt>
+File: snap-3.png Graphic file (type png)
+ <use snap-3.png>
+Package pdftex.def Info: snap-3.png used on input line 197.
+(pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
+
+<snap-4.png, id=30, 642.4pt x 481.8pt>
+File: snap-4.png Graphic file (type png)
+ <use snap-4.png>
+Package pdftex.def Info: snap-4.png used on input line 200.
+(pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
+
+<snap-5.png, id=31, 642.4pt x 481.8pt>
+File: snap-5.png Graphic file (type png)
+ <use snap-5.png>
+Package pdftex.def Info: snap-5.png used on input line 203.
+(pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
+
+<snap-6.png, id=32, 642.4pt x 481.8pt>
+File: snap-6.png Graphic file (type png)
+ <use snap-6.png>
+Package pdftex.def Info: snap-6.png used on input line 206.
+(pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
+
+Overfull \hbox (4.98654pt too wide) detected at line 223
+\OML/cmm/m/it/10 K \OT1/cmr/m/n/10 = [] \OMS/cmsy/m/n/10 ^^F []
+ []
+
+<cena.jpg, id=33, 642.4pt x 481.8pt>
+File: cena.jpg Graphic file (type jpg)
+ <use cena.jpg>
+Package pdftex.def Info: cena.jpg used on input line 231.
+(pdftex.def)             Requested size: 107.72891pt x 80.7948pt.
+
+<extr.jpg, id=34, 642.4pt x 481.8pt>
+File: extr.jpg Graphic file (type jpg)
+ <use extr.jpg>
+Package pdftex.def Info: extr.jpg used on input line 237.
+(pdftex.def)             Requested size: 107.72891pt x 80.7948pt.
+ [3 <./baboon.jpg> <./snap-1.png (PNG copy)> <./snap-2.png (PNG copy)> <./snap-
+3.png (PNG copy)> <./snap-4.png (PNG copy)> <./snap-5.png> <./snap-6.png (PNG c
+opy)> <./cena.jpg> <./extr.jpg>] (./main.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -907,41 +938,38 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[3
+[4
 
-] (./main.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 4934 strings out of 492995
- 70288 string characters out of 6132704
- 148624 words of memory out of 5000000
- 8376 multiletter control sequences out of 15000+600000
- 44834 words of font info for 94 fonts, out of 8000000 for 9000
+ 4985 strings out of 492995
+ 70982 string characters out of 6132704
+ 150790 words of memory out of 5000000
+ 8421 multiletter control sequences out of 15000+600000
+ 42269 words of font info for 87 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,10n,26p,570b,351s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
-live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texli
-ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive
-/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/20
-17/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/201
-7/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/te
-xmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-dist/f
-onts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type
-1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/time
-s/utmri8a.pfb>
-Output written on main.pdf (3 pages, 205799 bytes).
+ 39i,11n,26p,631b,351s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc
+}</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></u
+sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
+/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/l
+ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
+al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
+texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
+e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-di
+st/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/
+type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/
+times/utmri8a.pfb>
+Output written on main.pdf (4 pages, 2665253 bytes).
 PDF statistics:
- 66 PDF objects out of 1000 (max. 8388607)
- 46 compressed objects within 1 object stream
+ 96 PDF objects out of 1000 (max. 8388607)
+ 60 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
