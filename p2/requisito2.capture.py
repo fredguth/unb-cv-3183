@@ -9,26 +9,29 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 
 capture = cv2.VideoCapture(0)
-# capture.set(3, 640)
-# capture.set(4, 360)
+capture.set(3, 640)
+capture.set(4, 360)
 cv2.namedWindow("Snapshot")
 cv2.namedWindow("Raw")
 snapshot = None
 count = 0
+snapcount = 1
 while True:
   ret, image = capture.read()
   mirror = cv2.flip( image, 1)  # mirrors image
   gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
   cv2.imshow("Raw", mirror)
-  if count%120==0:
+  if count%10==0:
     snapshot = gray_image
     found, corners = cv2.findChessboardCorners(
         gray_image, (8, 6), None)
     if found and corners.shape[0]==48:
       cv2.imshow("Snapshot", snapshot)
       cv2.moveWindow("Snapshot", 640,43)    
-      filename = directory + '/snap-{}-{}.png'.format(exp, count)
+      filename = directory + '/snap-{}-{}.png'.format(exp, snapcount)
+      snapcount += 1
       cv2.imwrite(filename, snapshot)
+  count += 1
   # Stop ('ESC')  
   k = cv2.waitKey(15)
   if k == 27:  # Esc -> Stop
