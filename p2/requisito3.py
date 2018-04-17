@@ -197,5 +197,11 @@ while(capture.isOpened()):
         goodResult = False
         filename = directory + '/extr-{}-{}.png'.format(exp, count)
         cv2.imwrite(filename, dst)
+        fs_write = cv2.FileStorage(
+            './exp-{}/Extrinsics.xml'.format(exp), cv2.FILE_STORAGE_WRITE)
+        fs_write.write('R', R)
+        fs_write.write('t', t)
+        fs_write.write('distance', distance)
+        fs_write.release()
 capture.release()
 cv2.destroyAllWindows()
