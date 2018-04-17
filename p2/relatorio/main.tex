@@ -5,8 +5,10 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\usepackage{url}
 \usepackage[utf8]{inputenc}
 \usepackage{textcomp}
+
 \usepackage[english,ngerman,brazilian]{babel}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -35,62 +37,79 @@ component, formatting, style, styling, insert
 \end{IEEEkeywords}
 
 \section{Introdução}
-Uma câmera é um instrumento de aquisição de imagens. Conhecendo seus parâmetros intrínsecos, como distância focal e distorção da lente, e extrínsecos, sua rotação e translação no sistema de coordenadas do mundo real, é possível estimar a posição 3D de um objeto a partir de sua imagem\cite{tese}, o que possibilita diversas aplicações: por exemplo, a mensuração da altura de pessoas registradas em vídeos de camêras de segurança ou a estimativas de posições de atletas em campo, entre outras.
+Uma câmera faz um mapeamento geométrico do mundo 3D para o plano de uma imagem 2D. Conhecendo seus parâmetros intrínsecos, como distância focal e distorção da lente, e extrínsecos, sua rotação e translação no sistema de coordenadas do mundo real, é possível estimar a posição 3D de um objeto a partir de sua imagem\cite{tese}. 
+
+Isto possibilita diversas aplicações: por exemplo, a mensuração da altura de pessoas registradas em vídeos de camêras de segurança ou a estimativas de posições de atletas em campo, entre outras.
 
 \subsection{Objetivos}
 Os objetivos deste projeto são a aplicação prática da teoria de calibração de câmeras e o desenvolvimento de uma "régua visual", capaz de medir um objeto através da sua imagem.
 
+Mais especificamente deseja-se que sejam desenvolvidos programas usando a biblioteca OpenCV capazes de:
+\begin{enumerate}
+\item medir um segmento de reta em imagens através de cliques de mouse;
+\item realizar a calibração de uma câmera digital, armazenando os parâmetros intrísecos e os coeficientes de distorções em arquivos XML;
+\item realizar a calibração de uma câmera digital a partir de diferentes distâncias da câmera, calculando os parâmetros extrínsecos da mesma e avaliando a diferença dos resultados;
+\item medir um objeto através de sua imagem e comparar com suas dimensões reais;
+\item analisar os resultados obtidos.
+\end{enumerate}
 \section{Revisão Teórica}
-Os objetivos deste projeto são a aplicação prática da teoria de calibração de câmeras e o desenvolvimento de uma "régua visual", capaz de medir um objeto através da sua imagem.
 
-\subsection{Modelo de Câmera com Coordenadas Homogêneas}
-O modelo de câmera estenopeica (pinhole) faz um mapeamento geométrico do mundo 3D para o plano da imagem 2D.\cite{unicamp}
+\subsection{Câmera Estenopeica com Coordenadas Homogêneas}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \begin{center}
-\includegraphics[width=0.5\columnwidth]{pinhole.png}
-\caption{Imagem do arquivo venn.jpg}
+\includegraphics[width=0.75\columnwidth]{pinhole.png}
+\caption{Modelo de Câmera Estenopeica\cite{docsopencv}}
 \end{center}
 \end{figure}
 
-Se os pontos do mundo (X) e da imagem (x) são representados por coordenadas homogêneas, podemos expressar matematicamente a projeção da câmera como uma matriz\cite{tese}:
+Se os pontos do mundo \(X\) e da imagem \(x\) são representados por coordenadas homogêneas, podemos expressar matematicamente a projeção da câmera como uma matriz\cite{tese}:
 
-\[\lambda \cdot x = P \cdot X\]
+\begin{equation}\lambda  x = P  X\end{equation}
 
 onde \(\lambda\) é um fator de escala e P é a matriz 3x4 de projeção, também chamada matriz de calibração.
 
-Sendo X expresso em coordenadas euclidianas, P pode ser decomposto em duas entidades geométricas: os parâmetros intrísecos e extrísecos de calibração\cite{tese}
-
-\[P = K (R\cdot t)\] 
-\[t = -R \cdot \widetilde{C}\]
-onde \(\widetilde{C}\) é a origem da imagem. \cite{Hartley2004}
+P pode ser decomposto em duas entidades geométricas: os parâmetros intrísecos e extrísecos de calibração\cite{tese}
+\begin{equation}
+P = K [R | t]
+\end{equation}
+\begin{equation}
+t = -R\widetilde{C}
+\end{equation}
+onde \(\widetilde{C}\) é a origem do sistema de coordenadas da câmera\cite{Hartley2004}.
 
 Os parâmetros intrísecos de calibração descrevem a transformação entre a imagem ideal e a imagem em pixels
-$$
+\begin{equation}
 K = \begin{pmatrix} 
-f & s & u_0 \\
-0 & \alpha f & v_0\\
+f & s & c_x \\
+0 & \alpha f & c_y\\
 0 & 0 & 1
 \end{pmatrix}
-$$
-e os extrínsecos são a rotação e translação que transformam pontos no espaço do objeto para pontos no espaço da imagem e vice-versa\cite{tese}.
+\end{equation}
+e os extrínsecos são a rotação \(R\) e translação \(t\) que transformam pontos no espaço do objeto para pontos no espaço da imagem e vice-versa\cite{tese}.
 
 Como há 6 graus de liberdade nos parâmetros extrínsecos e 5 nos intrísecos, é necessário pelo menos 6 correspondências \({x_i \leftrightarrow X_i}\) do mesmo ponto no espaço da imagem e no espaço do objeto para obter P\cite{tese}. 
 
-Como há um erro inerente nas medidas experimentais, para melhorar a qualidade da estimativa é preciso usar \(n > 6\) correspondências (como será visto na Metodologia, usaremos 48). Como não há uma única matriz P que resolve esse sistema de equações é adicionar restrições.  
+Dado que há um erro inerente nas medidas experimentais, para melhorar a qualidade da estimativa é preciso usar \(n > 6\) correspondências (como será visto em \ref{metodologia}, usaremos 48 pontos) e, assim, não há uma única matriz P que resolve esse sistema de equações. Precisamos, portanto, adicionar restrições para encontrar uma solução única.  
 
-Um método comum é adicionar a restrição \(p_34 = 0\)\cite{Hartley2004, tese}, mas uma melhor abordagem\cite{tese} é fazer a minimização do somatório da distância euclidiana entre o ponto observado e o estimado.
+Um método comum é adicionar a restrição \(p_{34} = 0\)\cite{Hartley2004}, mas uma melhor abordagem\cite{tese} é:
 
-A biblioteca OpenCV\cite{OpenCV} usa essa última abordagem e aplica o método Levenberg-Marquant para resolver a minimização. 
+\begin{equation}
+\begin{aligned}
+P = \min_{P'} \sum_{i}d(x_i, P'Xi)^2
+\end{aligned}
+\end{equation}
+onde \(d(x_i, P'Xi) \) é a distância euclidiana entre o ponto observado e o estimado. 
 
 \subsection{Distorções}
 
-O modelo até aqui descrito descreve uma câmera ideal, mas as lentes das câmeras reais podem gerar distorções.  Essas distorções também são parâmetros intrínsecos que precisam ser considerados. 
+O modelo até aqui descrito descreve uma câmera ideal, mas as lentes das câmeras reais podem gerar distorções, que também são parâmetros intrínsecos que precisam ser considerados. 
 
-A distorção radial causa uma curvatura no mapeamento de retas\cite{unicamp}.
+A distorção radial causa uma curvatura no mapeamento.
+
 (inserir imagem distorção)
 
-A correção dessa distorção pode ser modelada da seguinte maneira: 
+A correção dessa distorção pode ser modelada da seguinte maneira\cite{docsopencv}: 
 
     \[x_{retificado} = x( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\]
     \[y_{retificado} = y( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\]
@@ -106,38 +125,48 @@ Esses cinco parâmetros são conhecidos como coeficientes de distorção
 \((k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3)\).
 
 % [opencv-camera calibration]
-\section{Metodologia}
+\section{Metodologia}\label{metodologia}
 O modelo da câmera e seus parâmetros foram descritos na seção de Revisão Teórica. Nesta seção, descreve-se como estimá-los experimentalmente.
 
 \subsection{Materiais}
-Foram utilizados o seguintes materiais:
+Foram utilizados:
 \begin{itemize}
 \item Uma tábua de compensado
 \item Papel contact
+\item Fita adesiva
 \item Um padrão de calibração xadrez impresso em papel A4
 \item Uma trena
 \item Uma régua
 \item Computador MacBook Pro (Retina, 13-inch, Early 2015), Processador Intel Core i5 2,7 GHz, 8GB de RAM
 \item Python 3.6.3 :: Anaconda custom (64-bit)
 \item OpenCV 3.4.0
+\item sete programas em python especialmente desenvolvidos para o projeto. Todos estão disponíveis no repositório: \url{git@github.com:fredguth/unb-cv-3183.git}
 \end{itemize}
 
 \subsection{Preparação}
  \begin{enumerate}
- \item Imprime-se o padrão de calibração em folha A4 e o cola à tábua de compensado usando o Papel contact
+ \item Imprime-se o padrão de calibração em folha A4 e o cola à tábua de compensado usando o Papel Contact.
  \item Com o programa \textit{requisito1.py}, abre-se uma imagem jpg e com cliques do mouse desenha-se um segmento de reta sobre a imagem entre o primeiro e o segundo clique, registrando-se a distância \(||p2 - p1||_2 \) na própria imagem aberta. 
  \end{enumerate}
 \subsection{Obtenção dos parâmetros intrínsecos}
  \begin{enumerate}
-  \item Com o programa \textit{requisito2.capturate.py}, capturou-se sequências de imagens de um padrão de calibração, como o onipresente tabuleiro de xadrez, em diversas orientações e posições. Foram capturadas mais de cinco sequencias, em diferentes distâncias e cada sequencia apresentava mais de dez imagens. Essas sequencias são gravadas pelo próprio programa em diferentes diretórios. 
-  \item Com o programa \textit{requisito2.calibrate.py}, os cantos dos quadrados do padrão de calibração xadrez são detectados e apenas com esses pontos já é possível obter os parâmetros intrínsecos K e os coeficientes de distorção.
- Executamos a calibração para as diversas sequencias de imagens do passo anterior. Os parâmetros intrínsecos e coeficientes de distorção foram armazenados em arquivos xml nos respectivos diretórios.
+  \item Executa-se o programa \textit{requisito2.capture.py} que abre um stream de vídeo e grava a imagem sempre que detecta os cantos dos quadrados no padrão de calibração de tabuleiro de xadrez. O programa pede o número do experimento e grava as imagens capturadas no diretório do mesmo.  Foram feitos 8 experimentos que geraram entre 25 e 70 imagens cada.
+  \item Executa-se o programa \textit{requisito2.calibrate.py} para cada experimento. O programa detecta os cantos dos quadrados do padrão de calibração xadrez e refina essa deteção para obter os parâmetros intrínsecos K e os coeficientes de distorção. É importante mover o quadrado no campo de captura da câmera em diversas orientações e posições, em diferentes distâncias. Os parâmetros intrínsecos e coeficientes de distorção são automaticamente armazenados em arquivos xml nos diretórios dos respectivos experimentos.
 \item Dado que já temos os coeficientes de distorção, com o programa \textit{requisito2.measure.py} retificamos as imagens da câmera e permitimos medir distâncias na imagem retificada em pixels. 
+\item Após todos os experimentos executados, executa-se o programa \textit{requisito2.analyse.py} que gera a média e o desvio parão dos parâmetros intrísecos, salvando-os no diretório /textit{./exp-0/}.
 \end{enumerate}
 \subsection{Obtenção dos parâmetros extrínsecos}
 \begin{enumerate}
-\item Com o programa \textit{requisito3.py}Computamos a correspondencia entre pontos da imagem e do espaço do objeto, atribuindo como origem do sistema de coordenadas do mundo, o ponto de intersecção do canto superior esquerdo. Os parâmetros extrínsecos R e t são obtidos usando a função \textit{solvePnPRansac} da OpenCV.
-\item Executamos o passo anterior em três diferentes distâncias, o mais perto possível, o mais longe possível e uma medida intermediária. Medimos a distância da câmera à origem do padrão de calibração usando a trena. Para cada distância, obtemos três vezes os valores de R e t.
+\item Executa-se o programa \textit{requisito3.py}, que computa a correspondencia entre pontos da imagem e do espaço do objeto, atribuindo como origem do sistema de coordenadas do mundo, o ponto de intersecção do canto superior esquerdo do tabuleiro e através da função \textit{solvePnP} da OpenCV\cite{OpenCV}, obtem os parâmetros extrínsecos R e t. 
+\item Quando o programa pede o número do experimento, escolhe-se \(0\), uma vez que queremos usar os parâmetros intrísecos médios, medidos na etapa anterior.
+
+\item Deixa-se a câmera em um ponto marcado pela fita adesiva, tentando colocá-la ortogonal ao plano da sua base. 
+\item Com a câmera posicionada, posiciona-se o tabuleiro na distância mais próximo possível da câmera em que o padrão de calibração tem seus cantos detectados (os cantos ficam marcados com pontos coloridos no \textit{stream} da câmera), marcando com a fita adesiva este ponto como \(d_{min}\). 
+\item Repete-se o passo anterior, tentando encontrar a distância mais afastada da câmera em que os cantos do padrão de calibração ainda são detectáveis. Marca-se este ponto com fita adesiva como \(d_{max}\); e um ponto intermediário entre \(d_{min}\) e \(d_{max}\), que chamamos \(d_{med}\).
+\item Medimos a distância da câmera à origem do padrão de calibração usando a trena. Para cada distância, obtemos três vezes os valores de R e t.
+\item Com todos os pontos marcados e a câmera posicionada, acionamos o modo de captura apertando a tecla \textit{espaço}
+\item Leva-se o tabuleiro de xadrez para \(d_{min}\) e após algumas capturas (identificação do padrão xadrez na imagem \textit{stream} da câmera), apertamos a tecla \textit{espaço} novamente para sair do modo captura.
+\item Repete-se os últimos dois passos para as distâncias \(d_{med}\) e \(d_{med}\). As imagens captadas com as respectivas distâncias medidas são gravadas no diretório do experimento selecionado (no caso, \textit{./exp-0/}). 
 \end{enumerate}
 \subsection{Obtenção da altura de um objeto através da sua imagem}
 Com os parâmetros intrínsecos e extrínsecos,  é possível medir um objeto no mundo real a partir da sua imagem. Neste projeto, entretanto, não se obteve êxito em desenvolver essa funcionalidade no programa \textit{requisito4.py}
