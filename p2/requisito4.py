@@ -15,10 +15,10 @@ t = None
 distance = 0
 
 
-fs_read = cv2.FileStorage('./exp-0/Intrinsics.xml'.format(exp), cv2.FILE_STORAGE_READ)
+fs_read = cv2.FileStorage('./exp-0/Intrinsics.xml', cv2.FILE_STORAGE_READ)
 intrinsic = fs_read.getNode('Intrinsics').mat()
 fs_read.release()
-fs_read = cv2.FileStorage('./exp-0/Distortion.xml'.format(exp), cv2.FILE_STORAGE_READ)
+fs_read = cv2.FileStorage('./exp-0/Distortion.xml', cv2.FILE_STORAGE_READ)
 distCoeff = fs_read.getNode('DistCoeffs').mat()
 fs_read.release()
 count = 0
@@ -27,6 +27,7 @@ capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FPS, 15)
 capture.set(3, 640)
 capture.set(4, 360)
+cv2.namedWindow('Raw')
 cv2.namedWindow("Undistorted")
 
 
@@ -66,33 +67,42 @@ def drawLine (img, data, color):
     if (p2[0] > 0):
         cv2.line(img,tuple(p1),tuple(p2),color,2)
         print ("p1, p2: {}, {}".format(p1, p2))
+        p1_3D = project3D(p1)
+        p2_3D = project3D(p2)
         dist = np.linalg.norm(p2-p1)
-        print (img.shape)
+        dist3D = np.linalg.norm(p2_3D-p1_3D)
+        
         h, w= img.shape
         cv2.putText(img,"{} pixels".format(dist),(10,h-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5,color,1,cv2.LINE_AA)
-        print("dist:{}".format(dist))           
+        cv2.putText(img, "{} cm".format(dist3D), (10, h-80),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA)
+        print("dist:{}".format(dist))
+        print("dist3D:{}".format(dist3D))           
     return img
     
-def project3D(obj, img):
-    a, b = obj.shape
-    h = np.zeros((a, b+1), np.float32)
-    h[:, :-1] = obj
-    ones = np.ones(a)
-    h[:, 3] = ones
-    obj = h
-
-    a, b = img.shape
-    h = np.zeros((a, b+1), np.float32)
-    h[:, :-1] = img
-    ones = np.ones(a)
-    h[:, 2] = ones
-    img = h
-
+def calcP():
     P = np.zeros((4,4), np.float32)
     K = np.zeros((3,4), np.float32)
     K[:,:-1] = intrinsic
-    print(K)
-    Rt = np.zeros((4,4), np.float32)
+    
+    if not distance == 0:
+        zeros = np.zeros(4)
+        zeros[-1] = 1
+        Rt = np.hstack((R, t))
+        Rt = np.vstack((Rt, zeros))
+        P = np.matmul(K, Rt)
+
+    return P
+
+def project3D(point):
+    cam     = np.ones(3) # x
+    cam[:-1]=point
+    P = calcP()
+    # x = P X
+    # P'x = P'PX
+    # P'x = X
+    W =np.matmul(np.inv(P), cam)
+    return W
 
 def calculateExtrinsics(image, exp, count):
     global object_points
@@ -147,9 +157,9 @@ while(capture.isOpened()):
     # cv2.imshow('Raw', image)
     
     dst = drawLine(dst, undistorted, (255,33,255))
-    dst = calculateExtrinsics(dst, exp, count)
+    dst = calculateExtrinsics(dst, 0, count)
 
-    project3D(object_points, dst)
+    # project3D(object_points, dst)
     if (dst.size>640*480):
         h, w, c = dst.shape
     else:
