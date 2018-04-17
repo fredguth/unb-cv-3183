@@ -26,6 +26,9 @@ def mouse_callback(event, column, line, flags, params):
             params["line"] = cv2.line(img,tuple(p1),tuple(p2),(255,0,0),3)
             print ("p2: {}".format(p2))
             dist = np.linalg.norm(p2-p1)
+            h, w, c = img.shape
+            cv2.putText(img, "{} pixels".format(dist), (10, h-20),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
             print("dist:{}".format(dist))
 
 while(1):
