@@ -9,11 +9,11 @@ Os objetivos deste projeto são a aplicação prática da teoria de calibração
 
  Mais especificamente deseja-se que sejam desenvolvidos programas usando a biblioteca OpenCV capazes de:
 
-1) medir um segmento de reta em imagens através de cliques de mouse
-2) realizar a calibração de uma câmera digital, armazenando os parâmetros intrísecos e os coeficientes de distorções em arquivos XML.
-3) realizar a calibração de uma câmera digital a partir de diferentes distâncias da câmera, calculando os parâmetros extrínsecos da mesma e avaliando a diferença dos resultados
-4) Com os parâmetros intrísecos e extrínsecos conhecidos, medir um objeto através de sua imagem e comparar com suas dimensões reais
-5) Analisar os resultados obtidos
+\item medir um segmento de reta em imagens através de cliques de mouse;
+\item realizar a calibração de uma câmera digital, armazenando os parâmetros intrísecos e os coeficientes de distorções em arquivos XML;
+\item realizar a calibração de uma câmera digital a partir de diferentes distâncias da câmera, calculando os parâmetros extrínsecos da mesma e avaliando a diferença dos resultados;
+\item medir um objeto através de sua imagem e comparar com suas dimensões reais;
+\item analisar os resultados obtidos.
 
 #Revisão Teórica
 
