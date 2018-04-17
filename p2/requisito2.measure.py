@@ -1,17 +1,20 @@
 import numpy as np
 import cv2
 
-fs_read = cv2.FileStorage('Intrinsics.xml', cv2.FILE_STORAGE_READ)
+exp = input("Please enter from which experiment you want to measure: ")
+fs_read = cv2.FileStorage(
+    './exp-{}/Intrinsics.xml'.format(exp), cv2.FILE_STORAGE_READ)
 intrinsic = fs_read.getNode('Intrinsics').mat()
 fs_read.release()
-fs_read = cv2.FileStorage('Distortion.xml', cv2.FILE_STORAGE_READ)
+fs_read = cv2.FileStorage(
+    './exp-{}/Distortion.xml'.format(exp), cv2.FILE_STORAGE_READ)
 distCoeff = fs_read.getNode('DistCoeffs').mat()
 fs_read.release()
 
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FPS, 15)
-# capture.set(3, 640)
-# capture.set(4, 360)
+capture.set(3, 640)
+capture.set(4, 360)
 cv2.namedWindow("Raw")
 cv2.namedWindow("Undistorted")
 

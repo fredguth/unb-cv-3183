@@ -1,38 +1,34 @@
 import numpy as np
 import cv2
-import os
 
-fs_read = cv2.FileStorage('Intrinsics.xml', cv2.FILE_STORAGE_READ)
-intrinsic = fs_read.getNode('Intrinsics').mat()
-fs_read.release()
-fs_read = cv2.FileStorage('Distortion.xml', cv2.FILE_STORAGE_READ)
-distCoeff = fs_read.getNode('DistCoeffs').mat()
-fs_read.release()
 
 board_w = 8  # horizontal enclosed corners on chessboard
 board_h = 6  # vertical enclosed corners on chessboard
 
-criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+
 
 R = None
 t = None
 distance = 0
 
-exp = input("Please enter experiment number: ")
-cwd = os.getcwd()
-directory = cwd + '/exp-'+exp
-if not os.path.exists(directory):
-    os.makedirs(directory)
-square = float(input("Please enter size of a chessboard square in cm:"))
+exp = input("Please enter from which experiment you want to calibrate: ")
+
+
+fs_read = cv2.FileStorage('./exp-{}/Intrinsics.xml'.format(exp), cv2.FILE_STORAGE_READ)
+intrinsic = fs_read.getNode('Intrinsics').mat()
+fs_read.release()
+fs_read = cv2.FileStorage('./exp-{}/Distortion.xml'.format(exp), cv2.FILE_STORAGE_READ)
+distCoeff = fs_read.getNode('DistCoeffs').mat()
+fs_read.release()
+square = 2.74
 count = 0
 
 capture = cv2.VideoCapture(0)
 capture.set(cv2.CAP_PROP_FPS, 15)
 capture.set(3, 640)
 capture.set(4, 360)
-# cv2.namedWindow("Raw")
 cv2.namedWindow("Undistorted")
-# cv2.namedWindow("Chess")
+
 
 raw = {
     "isMeasuring": False,
@@ -74,7 +70,7 @@ def drawLine (img, data, color):
     return img
     
 
-def calculateExtrinsics(image, exp, count):
+def calculateExtrinsicsNovo(image, exp, count):
     object_points = np.zeros((board_h*board_w, 3), np.float32)
     object_points[:, :2] = np.mgrid[0:board_w,
                                     0:board_h].T.reshape(-1, 2)*square
@@ -119,7 +115,7 @@ def calculateExtrinsics(image, exp, count):
     image = cv2.drawChessboardCorners(
          image, (board_w, board_h), corners, found)
     return image
-def calculateExtrinsicsOriginal(image, exp, count):
+def calculateExtrinsics(image, exp, count):
     object_points = np.zeros((board_h*board_w, 3), np.float32)
     object_points[:, :2] = np.mgrid[0:board_w, 0:board_h].T.reshape(-1, 2)*square
 
@@ -156,11 +152,10 @@ while(capture.isOpened()):
     image = cv2.flip( image, 1)  # mirrors image
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     h,  w = image.shape[:2]
-    # newcameraintrinsic, roi = cv2.getOptimalNewCameraMatrix(intrinsic,distCoeff,(w,h),1,(w,h))
+    newcameraintrinsic, roi = cv2.getOptimalNewCameraMatrix(intrinsic,distCoeff,(w,h),1,(w,h))
 
     #undistort
-    # dst = cv2.undistort(image, intrinsic, distCoeff, None, newcameraintrinsic)
-    dst = cv2.undistort(image, intrinsic, distCoeff)
+    dst = cv2.undistort(image, intrinsic, distCoeff, None, newcameraintrinsic)
 
     # # crop the image
     # x,y,w,h = roi

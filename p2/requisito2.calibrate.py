@@ -1,15 +1,9 @@
 import numpy as np
 import cv2
 import glob
+import os
+import imutils
 
-
-# termination criteria
-# cv2.TERM_CRITERIA_EPS->stop the algorithm iteration if specified accuracy, epsilon, is reached
-# cv2.TERM_CRITERIA_MAX_ITER - stop the algorithm after the specified number of iterations
-# cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER -> any of above criterias
-# 30 = maxIter
-# 0.001 = epsilon
-criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 board_w = 8  # horizontal enclosed corners on chessboard
 board_h = 6 # vertical enclosed corners on chessboard
@@ -23,11 +17,16 @@ object_points = []  # 3d point in real world space
 image_points  = []  # 2d points in image plane.
 
 
-exp = input("Please enter experiment number: ")
+exp = input("Please select from which experiement to calibrate: ")
+cwd = os.getcwd()
+directory = cwd + '/exp-'+exp
 images = glob.glob('./exp-{}/s*.png'.format(exp))
+width = 640
 gray = None
 for fname in images:
     image = cv2.imread(fname)
+    if width:
+        image = imutils.resize(image, width=width)
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = gray_image
     # Find the chess board corners
@@ -35,10 +34,9 @@ for fname in images:
     #   image – Input image.
     #   patternSize – Number of inner corners per a chessboard (points_per_row, points_per_column) 
     #   corners – Array of detected corners
-
-    #found, corners = cv2.findChessboardCorners(gray_image, (board_w, board_h), cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FILTER_QUADS)
-    found, corners = cv2.findChessboardCorners(
-        gray_image, (board_w, board_h), None)
+    flags = cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FILTER_QUADS + cv2.CALIB_CB_NORMALIZE_IMAGE
+    found, corners = cv2.findChessboardCorners(gray_image, (board_w, board_h), flags)
+    
 
     # If found corners, refine
     if found == True:
@@ -51,6 +49,14 @@ for fname in images:
         #   zeroZone – Half of the size of the dead region in the middle of the search zone over which the summation in the formula below is not done. It is used sometimes to avoid possible singularities of the autocorrelation matrix. The value of (-1,-1) indicates that there is no such a size.
         #   criteria – Criteria for termination of the iterative process of corner refinement. That is, the process of corner position refinement stops either after criteria.maxCount iterations or when the corner position moves by less than criteria.epsilon on some iteration.
         #  https://docs.opencv.org/3.0-beta/modules/imgproc/doc/feature_detection.html      
+        
+        # termination criteria
+        # cv2.TERM_CRITERIA_EPS->stop the algorithm iteration if specified accuracy, epsilon, is reached
+        # cv2.TERM_CRITERIA_MAX_ITER - stop the algorithm after the specified number of iterations
+        # cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER -> any of above criterias
+        # 30 = maxIter
+        # 0.001 = epsilon
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         corners = cv2.cornerSubPix(
             gray_image, corners, (11, 11), (-1, -1), criteria)
 
@@ -63,7 +69,7 @@ for fname in images:
         #   patternWasFound – Parameter indicating whether the complete board was found or not. The return value of findChessboardCorners() should be passed here.
         image = cv2.drawChessboardCorners(image, (board_w, board_h), corners, found)
         cv2.imshow('Snapshot', image)
-        cv2.waitKey(200)
+        cv2.waitKey(1)
 cv2.destroyAllWindows()
 
 
@@ -79,29 +85,22 @@ intrinsic [1,1] = 1
 #   tvecs – Output vector of translation vectors estimated for each pattern view.
 ret, intrinsic, distCoeff, rvecs, tvecs = cv2.calibrateCamera(object_points, image_points, gray.shape[::-1],cv2.CALIB_USE_INTRINSIC_GUESS,criteria)
 h,  w = gray.shape[:2]
+
+#refine instrinsics based on alpha =1,  all pixels are retained with some extra black images. 
 newcameraintrinsic, roi = cv2.getOptimalNewCameraMatrix(
         intrinsic, distCoeff, (w, h), 1, (w, h))
 
-# check reprojection error
-total_error = 0
-for i in range(0, len(object_points)):
-    image_points2, _ = cv2.projectPoints(object_points[i], rvecs[i], tvecs[i], intrinsic, distCoeff)
-    error = cv2.norm(image_points[i],image_points2, cv2.NORM_L2)/len(image_points2)
-    total_error += error
-
-print ("mean error: {} pixels ".format(total_error/len(object_points)))
-
 
 print("Storing Intrinsics and Distortions files...\n")
-# print(intrinsic)
-fs_write = cv2.FileStorage('Intrinsics.xml',cv2.FILE_STORAGE_WRITE)
+
+fs_write = cv2.FileStorage('./exp-{}/Intrinsics.xml'.format(exp),cv2.FILE_STORAGE_WRITE)
 fs_write.write('Intrinsics', newcameraintrinsic)
 fs_write.release()
 
-fs_write = cv2.FileStorage('Distortion.xml', cv2.FILE_STORAGE_WRITE)
+fs_write = cv2.FileStorage(
+    './exp-{}/Distortion.xml'.format(exp), cv2.FILE_STORAGE_WRITE)
 fs_write.write('DistCoeffs', distCoeff)
 fs_write.release()
 
-# np.save('Intrinsics', intrinsic)
-# np.save('Distortion', distCoeff)
+
 
