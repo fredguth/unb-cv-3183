@@ -64,7 +64,7 @@ Mais especificamente deseja-se:
 
 Se os pontos do mundo \(X\) e da imagem \(x\) são representados por coordenadas homogêneas, podemos expressar matematicamente a projeção da câmera como uma matriz\cite{tese}:
 
-\begin{equation}\lambda  x = P  X\end{equation}
+\begin{equation}\lambda  x = P  X\label{eq:P_X}\end{equation}
 
 onde \(\lambda\) é um fator de escala e P é a matriz 3x4 de projeção, também chamada matriz de calibração.
 
@@ -98,6 +98,32 @@ P = \min_{P'} \sum_{i}d(x_i, P'Xi)^2
 \end{equation}
 onde \(d(x_i, P'Xi) \) é a distância euclidiana entre o ponto observado e o estimado. 
 
+\subsection{Projeção Reversa}
+Ao projetar informações do mundo 3D para o 2D, \(P\) elimina informações do mundo real. Matematicamente podemos dizer que é uma matriz transformação 3x4, logo, não invertível. 
+
+Dado um ponto na imagem, só é possível saber em que reta, a partir do centro da câmera, aquele ponto faz parte. Se, entretanto, estamos medindo um objeto que se encontra no mesmo plano em que foi feita a calibração, sabemos que \(Z=0\), e podemos calcular \(X\) a partir da \textit{Equação \ref{eq:P_X}} da seguinte forma:
+\begin{equation}
+\lambda  \begin{bmatrix} 
+x \\
+y \\
+1
+\end{bmatrix}
+=
+\begin{vmatrix} 
+p_{11} & p_{12} & p_{13}=0& p_{14} \\
+p_{21} & p_{22} & p_{23}=0& p_{24} \\
+p_{31} & p_{32} & p_{33}=0& p_{34} 
+\end{vmatrix}
+\begin{bmatrix} 
+X \\
+Y \\
+Z=0 \\
+1
+\end{bmatrix}
+\end{equation}
+\begin{equation}
+\therefore  P_{3x3}^{-1} \lambda x = X
+\end{equation}
 \subsection{Distorções}
 
 O modelo até aqui descrito descreve uma câmera ideal, mas as lentes das câmeras reais podem gerar distorções, que também são parâmetros intrínsecos que precisam ser considerados. 
@@ -171,6 +197,12 @@ Foram utilizados:
 \item Repete-se os últimos dois passos para as distâncias \(d_{med}\) e \(d_{med}\). As imagens captadas com as respectivas distâncias medidas são gravadas no diretório do experimento selecionado. É importante verificar se há pelo menos 3 imagens gravadas para cada distância.
 \end{enumerate}
 \subsection{Obtenção da altura de um objeto através da sua imagem}
+\begin{enumerate}
+\item Executa-se o programa \textit{requisito4.py} e posiciona-se o padrão de calibração no plano onde se deseja colocar o objeto (é recomendável marcar esse ponto com a fita inicialmente).
+\item Com a câmera calibrada, posiciona-se o objecto que se deseja medir no plano de calibração marcado pela fita.
+\item Com o mouse, clica-se na imagem dos extremos do objeto, formando linhas entre os extremos (cima a baixo e esquerda e direita).
+\item Com a régua, confere-se as medidas reais entre os extremos.
+\end{enumerate}
 Com os parâmetros intrínsecos e extrínsecos,  é possível medir um objeto no mundo real a partir da sua imagem. Neste projeto, entretanto, não se obteve êxito em desenvolver essa funcionalidade no programa \textit{requisito4.py}
 
 \section{Resultados}
@@ -260,6 +292,12 @@ em \textit{cm}& \textbf{\textit{Real}}& \(d_{1}\)&\(d_{1}\)&\(d_{3}\)&\(\bar{d}\
 \end{table}
 O erro ficou entre 2 e 6\%. Um pouco acima da margem de 2\% do desvio padrão.
 \subsection{Medição de Objeto 3D a partir de sua imagem}
+\begin{figure}[ht!]\label{baboon}
+\begin{center}
+\includegraphics[width= .9\columnwidth]{projection-2.png}
+\caption{Medição em pixels de segmentos em imagens}
+\end{center}
+\end{figure}
 \section{Discussão e Conclusões}
 Neste trabalho, utilizamos o modelo de câmera estenopeica para fazer mapeamentos de posições no mundo real para a imagem e vise-versa. O resultado obtido para as distâncias \ref{calibextr} na calibração dos parâmetros extrínsecos tiveram um erro menor do que 6\%. Entretanto, cabe ressaltar que para isso foi necessário capturar centenas de imagens na fase de calibração dos intrínsecos. Tentativas feitas que usavam poucas dezenas não lograram êxito. 
 

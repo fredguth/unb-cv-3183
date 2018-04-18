@@ -1,10 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  18 APR 2018 11:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  18 APR 2018 12:28
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/fredguth/UNB/ComputerVision/projetos/p2/relatorio/main.tex
-(/Users/fredguth/UNB/ComputerVision/projetos/p2/relatorio/main.tex
+**main.tex
+(./main.tex
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
 (./IEEEtran.cls
@@ -738,7 +737,11 @@ Package babel Info: Making " an active character on input line 125.
 Language: portuges 2008/03/18 v1.2q Portuguese support from the babel system
 \l@brazilian = a dialect from \language\l@portuges 
 ))
-(./main.aux)
+(./main.aux
+
+LaTeX Warning: Label `baboon' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
@@ -861,73 +864,80 @@ Underfull \hbox (badness 3623) in paragraph at lines 80--81
 File: distortion.png Graphic file (type png)
 
 <use distortion.png>
-Package pdftex.def Info: distortion.png used on input line 109.
+Package pdftex.def Info: distortion.png used on input line 135.
 (pdftex.def)             Requested size: 252.0pt x 97.07648pt.
  [2 <./distortion.png>]
-Underfull \hbox (badness 3769) in paragraph at lines 167--168
+Underfull \hbox (badness 3769) in paragraph at lines 193--194
 []\OT1/ptm/m/n/10 Repete-se o passo an-te-rior, ten-tando en-con-trar a
  []
 
-<baboon.jpg, id=26, 321.2pt x 241.90375pt>
+<baboon.jpg, id=27, 321.2pt x 241.90375pt>
 File: baboon.jpg Graphic file (type jpg)
  <use baboon.jpg>
-Package pdftex.def Info: baboon.jpg used on input line 181.
+Package pdftex.def Info: baboon.jpg used on input line 213.
 (pdftex.def)             Requested size: 126.0pt x 94.89206pt.
 
-<snap-1.png, id=27, 642.4pt x 481.8pt>
+<snap-1.png, id=28, 642.4pt x 481.8pt>
 File: snap-1.png Graphic file (type png)
  <use snap-1.png>
-Package pdftex.def Info: snap-1.png used on input line 191.
+Package pdftex.def Info: snap-1.png used on input line 223.
 (pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
 
-<snap-2.png, id=28, 642.4pt x 481.8pt>
+<snap-2.png, id=29, 642.4pt x 481.8pt>
 File: snap-2.png Graphic file (type png)
  <use snap-2.png>
-Package pdftex.def Info: snap-2.png used on input line 194.
+Package pdftex.def Info: snap-2.png used on input line 226.
 (pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
 
-<snap-3.png, id=29, 642.4pt x 481.8pt>
+<snap-3.png, id=30, 642.4pt x 481.8pt>
 File: snap-3.png Graphic file (type png)
  <use snap-3.png>
-Package pdftex.def Info: snap-3.png used on input line 197.
+Package pdftex.def Info: snap-3.png used on input line 229.
 (pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
 
-<snap-4.png, id=30, 642.4pt x 481.8pt>
+<snap-4.png, id=31, 642.4pt x 481.8pt>
 File: snap-4.png Graphic file (type png)
  <use snap-4.png>
-Package pdftex.def Info: snap-4.png used on input line 200.
+Package pdftex.def Info: snap-4.png used on input line 232.
 (pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
 
-<snap-5.png, id=31, 642.4pt x 481.8pt>
+<snap-5.png, id=32, 642.4pt x 481.8pt>
 File: snap-5.png Graphic file (type png)
  <use snap-5.png>
-Package pdftex.def Info: snap-5.png used on input line 203.
+Package pdftex.def Info: snap-5.png used on input line 235.
 (pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
 
-<snap-6.png, id=32, 642.4pt x 481.8pt>
+<snap-6.png, id=33, 642.4pt x 481.8pt>
 File: snap-6.png Graphic file (type png)
  <use snap-6.png>
-Package pdftex.def Info: snap-6.png used on input line 206.
+Package pdftex.def Info: snap-6.png used on input line 238.
 (pdftex.def)             Requested size: 83.16046pt x 62.36418pt.
 
-Overfull \hbox (4.98654pt too wide) detected at line 223
+Overfull \hbox (4.98654pt too wide) detected at line 255
 \OML/cmm/m/it/10 K \OT1/cmr/m/n/10 = [] \OMS/cmsy/m/n/10 ^^F []
  []
 
-<cena.jpg, id=33, 642.4pt x 481.8pt>
+<cena.jpg, id=34, 642.4pt x 481.8pt>
 File: cena.jpg Graphic file (type jpg)
  <use cena.jpg>
-Package pdftex.def Info: cena.jpg used on input line 231.
+Package pdftex.def Info: cena.jpg used on input line 263.
 (pdftex.def)             Requested size: 107.72891pt x 80.7948pt.
 
-<extr.jpg, id=34, 642.4pt x 481.8pt>
+<extr.jpg, id=35, 642.4pt x 481.8pt>
 File: extr.jpg Graphic file (type jpg)
  <use extr.jpg>
-Package pdftex.def Info: extr.jpg used on input line 237.
+Package pdftex.def Info: extr.jpg used on input line 269.
 (pdftex.def)             Requested size: 107.72891pt x 80.7948pt.
+
+<projection-2.png, id=36, 642.4pt x 481.8pt>
+File: projection-2.png Graphic file (type png)
+ <use projection-2.png>
+Package pdftex.def Info: projection-2.png used on input line 297.
+(pdftex.def)             Requested size: 226.79846pt x 170.0955pt.
  [3 <./baboon.jpg> <./snap-1.png (PNG copy)> <./snap-2.png (PNG copy)> <./snap-
 3.png (PNG copy)> <./snap-4.png (PNG copy)> <./snap-5.png> <./snap-6.png (PNG c
-opy)> <./cena.jpg> <./extr.jpg>] (./main.bbl)
+opy)>]
+(./main.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -941,36 +951,41 @@ Before submitting the final camera ready copy, remember to:
 
 [4
 
-] (./main.aux) ) 
+ <./cena.jpg> <./extr.jpg> <./projection-2.png (PNG copy)>] (./main.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4986 strings out of 492995
- 71151 string characters out of 6132704
- 150790 words of memory out of 5000000
- 8421 multiletter control sequences out of 15000+600000
+ 4991 strings out of 492995
+ 71089 string characters out of 6132704
+ 151837 words of memory out of 5000000
+ 8426 multiletter control sequences out of 15000+600000
  42269 words of font info for 87 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,11n,26p,688b,351s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc
-}</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></u
-sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
-/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/l
-ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
-al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
-texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
-live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
-/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2
-017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/201
-7/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-di
-st/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/
-type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/
-times/utmri8a.pfb>
-Output written on main.pdf (4 pages, 2665376 bytes).
+ 39i,11n,26p,631b,351s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
+xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2017/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2017/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2017/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-dist/f
+onts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2017/texmf-di
+st/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/t
+ype1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/
+times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmr
+i8a.pfb>
+Output written on main.pdf (4 pages, 3027134 bytes).
 PDF statistics:
- 96 PDF objects out of 1000 (max. 8388607)
- 60 compressed objects within 1 object stream
+ 101 PDF objects out of 1000 (max. 8388607)
+ 63 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 61 words of extra memory for PDF output out of 10000 (max. 10000000)
 
