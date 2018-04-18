@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import cv2
 import os
 
@@ -90,18 +91,21 @@ def calcP():
         zeros[-1] = 1
         Rt = np.hstack((R, t))
         Rt = np.vstack((Rt, zeros))
-        P = np.matmul(K, Rt)
+        P = K @ Rt
 
     return P
 
 def project3D(point):
+    
     cam     = np.ones(3) # x
     cam[:-1]=point
     P = calcP()
-    # x = P X
-    # P'x = P'PX
-    # P'x = X
-    W =np.matmul(np.inv(P), cam)
+    P = np.delete(P, 2, 1) # delete 3rd column
+    W = np.linalg.inv(P) @ cam
+    W = W / W[2] 
+    W[2] = 0
+    # X = X/w, Y = Y/w, Z = 0, w not needed
+    
     return W
 
 def calculateExtrinsics(image, exp, count):
