@@ -66,16 +66,21 @@ def drawLine (img, data, color):
     p1 = data["p1"]
     p2 = data["p2"]
     if (p2[0] > 0):
-        cv2.line(img,tuple(p1),tuple(p2),color,2)
-        print ("p1, p2: {}, {}".format(p1, p2))
         p1_3D = project3D(p1)
         p2_3D = project3D(p2)
         dist = np.linalg.norm(p2-p1)
         dist3D = np.linalg.norm(p2_3D-p1_3D)
         
-        h, w= img.shape
+        if img.size <= 640 * 480:
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        
+        cv2.line(img,tuple(p1),tuple(p2),color,2)
+        print ("p1, p2: {}, {}".format(p1, p2))
+        
+        h, w, c= img.shape
+        
         cv2.putText(img,"{} pixels".format(dist),(10,h-20), cv2.FONT_HERSHEY_SIMPLEX, 0.5,color,1,cv2.LINE_AA)
-        cv2.putText(img, "{} cm".format(dist3D), (10, h-80),
+        cv2.putText(img, "{} cm".format(dist3D), (10, h-40),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA)
         print("dist:{}".format(dist))
         print("dist3D:{}".format(dist3D))           
@@ -96,7 +101,7 @@ def calcP():
     return P
 
 def project3D(point):
-    
+    print ('**** point', point)
     cam     = np.ones(3) # x
     cam[:-1]=point
     P = calcP()
@@ -108,9 +113,9 @@ def project3D(point):
     
     return W
 
-def calculateExtrinsics(image, exp, count):
+def calculateExtrinsics(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     global object_points
-
     global R
     global t
     global distance
@@ -138,16 +143,18 @@ def calculateExtrinsics(image, exp, count):
             image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
             image = cv2.drawChessboardCorners(
                 image, (board_w, board_h), corners, found)
+    else:
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
     return image
 
 while(capture.isOpened()):
     _, image = capture.read()    
     image = cv2.flip( image, 1)  # mirrors image
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     h,  w = image.shape[:2]
     newcameraintrinsic, roi = cv2.getOptimalNewCameraMatrix(intrinsic,distCoeff,(w,h),1,(w,h))
 
     #undistort
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     dst = cv2.undistort(image, intrinsic, distCoeff, None, newcameraintrinsic)
 
     # # crop the image
@@ -157,19 +164,21 @@ while(capture.isOpened()):
     cv2.setMouseCallback('Undistorted',mouse_callback, undistorted)
 
     
-    # image = drawLine(image, raw, (33,255,33))
-    # cv2.imshow('Raw', image)
+    image = drawLine(image, raw, (33,255,33))
+    cv2.imshow('Raw', image)
     
+    dst = calculateExtrinsics(dst)
     dst = drawLine(dst, undistorted, (255,33,255))
-    dst = calculateExtrinsics(dst, 0, count)
-
-    # project3D(object_points, dst)
+   
+    
     if (dst.size>640*480):
         h, w, c = dst.shape
     else:
-         h, w = dst.shape
+        print ('erro')
+        h, w = dst.shape
+        dst = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
     cv2.putText(dst, "Distance:{} cm".format(distance), (w-200, 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (33, 33, 255), 1, cv2.LINE_AA)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
     cv2.imshow('Undistorted', dst)
 
     k = cv2.waitKey(60) & 0xFF
@@ -177,6 +186,11 @@ while(capture.isOpened()):
         break
     if k == 32:  # Space -> snapshot
         saving = not saving
+
+    if k == ord("s"):
+        count +=1
+        filename = './exp-0/projection-{}.png'.format(count)
+        cv2.imwrite(filename, dst)
 
     if saving and goodResult:
         count += 1
