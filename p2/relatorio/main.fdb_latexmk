@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex main"] 1523980226 "main.aux" "main.bbl" "main" 1523980292
+["bibtex main"] 1523980226 "main.aux" "main.bbl" "main" 1524061777
   "/usr/local/texlive/2017/texmf-dist/bibtex/bst/IEEEtran/IEEEtran.bst" 1480098433 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
-  "main.aux" 1523980292 4535 40dfceda9a8b7a22995867f5127e326d ""
+  "main.aux" 1524061777 4535 40dfceda9a8b7a22995867f5127e326d ""
   "references.bib" 1523975738 1468 1a9c51b97cfbbffcbb6d2bb1e47e2202 ""
   (generated)
-  "main.bbl"
   "main.blg"
-["pdflatex"] 1523980290 "/Users/fredguth/UNB/ComputerVision/projetos/p2/relatorio/main.tex" "main.pdf" "main" 1523980292
-  "/Users/fredguth/UNB/ComputerVision/projetos/p2/relatorio/main.tex" 1523980290 15098 f52794c045b85c41747179fd056219b7 ""
+  "main.bbl"
+["pdflatex"] 1524061776 "/Users/fredguth/UNB/ComputerVision/projetos/p2/relatorio/main.tex" "main.pdf" "main" 1524061777
+  "/Users/fredguth/UNB/ComputerVision/projetos/p2/relatorio/main.tex" 1524061775 15155 147df31e3cdc2351c3e3775c9aba9dbb ""
   "/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc" 1480098666 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1480098689 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -111,9 +111,9 @@
   "cena.jpg" 1523985794 47905 4eb2d4d8f6a7fd619983fd1189ea8bbb ""
   "distortion.png" 1523980036 933061 5651769d77fce2ae696160279aa367ac ""
   "extr.jpg" 1523985258 48197 bf50fd2e87c72a454589c4c25acf3bbb ""
-  "main.aux" 1523980292 4535 40dfceda9a8b7a22995867f5127e326d ""
-  "main.bbl" 1523980235 1626 9964c5e61d7732604aa44ce126adaee6 "bibtex main"
-  "main.tex" 1523980290 15098 f52794c045b85c41747179fd056219b7 ""
+  "main.aux" 1524061777 4535 40dfceda9a8b7a22995867f5127e326d ""
+  "main.bbl" 1523980295 1626 9964c5e61d7732604aa44ce126adaee6 "bibtex main"
+  "main.tex" 1524061775 15155 147df31e3cdc2351c3e3775c9aba9dbb ""
   "pinhole.png" 1523975740 97238 e1b8da6d57e8bff1d602833f37b4736f ""
   "snap-1.png" 1523982350 174956 7b3001a17af28573b32565e10c6b68d3 ""
   "snap-2.png" 1523982350 185031 46992e05efd6745160d0d322db0e24dc ""
@@ -122,6 +122,6 @@
   "snap-5.png" 1523983724 174641 b3638dded2c72ab1e82b4bb46ec546f3 ""
   "snap-6.png" 1523982350 167402 043b4e4004104b83b5e277c7e549d840 ""
   (generated)
+  "main.pdf"
   "main.aux"
   "main.log"
-  "main.pdf"
