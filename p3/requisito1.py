@@ -20,31 +20,58 @@ def normalize(matrix):
   mat = mat/max_mat
   return mat
 
+
+def scan_line(line, imgL, imgR, window_size, width, height):
+    disp = np.zeros((width-window_size), dtype=np.float16) #unint8?
+    if line % 20 == 0:
+        print('{}% done'.format((line / (height - window_size)) * 100))
+
+    for column in range(width - window_size):
+        template = imgL[line:(line + window_size), column:(column + window_size)]
+        start = column - max_disp
+        if start < 0:
+            start = 0
+        end = column + window_size
+        strip = imgR[line:(line + window_size), start:end]
+
+        match = cv2.matchTemplate(strip, template, cv2.TM_SQDIFF)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
+
+        disp[column] = (column - start) - min_loc[0]
+    #     x_r = strip_start + min_loc[0]
+    #     if (min_val/window_size**2 < THRESHOLD) and (column - x_r) > 10:  # only OK matches
+    #         # X = (BASE_LINE * (column + x_r))/(2 * (column - x_r))
+    #         # Y = (BASE_LINE * (2 * line))/(2 * (column - x_r))
+    #         Z = (BASE_LINE * FOCAL_LENGTH)/(column - x_r)
+    #         depth_vet[x_l] = Z
+    # return depth_vet
+    return disp
+    
 def computeDisparity(imgL, imgR, k, maxshift):
   start = time.time()
   print ("staring at {}".format(start))
   disp = np.zeros(imgL.shape) 
-  b = int (k/2)
   l, c = imgL.shape
-  
-  for h in range (b, l-b-1):
-    for w in range(b, c-b-1):
-      template = imgL[h-b:h+b+1, w-b:w+b+1]
-      disparity = 0
-      cost = math.inf
-      for shift in range(0, maxshift):
-        window = imgR[h-b:h+b+1, (w+shift)-b:(w+shift)+b+1]
-        if (window.shape == template.shape):
-          sad = (abs(template-window)).sum()
-          if sad < cost:
-            cost = sad
-            disparity = shift
+  for h in range (l-window_size):
+    disp[h, window_size:c] = scan_line(h, imgL, imgR, window_size, c, l)
+    # for w in range(b, c-b-1):
+    #   template = imgL[h-b:h+b+1, w-b:w+b+1]
+    #   disparity = 0
+    #   cost = math.inf
+    #   for shift in range(0, maxshift):
+    #     window = imgR[h-b:h+b+1, (w+shift)-b:(w+shift)+b+1]
+    #     if (window.shape == template.shape):
+    #       sad = (abs(template-window)).sum()
+    #       if sad < cost:
+    #         cost = sad
+    #         disparity = shift
         
-      print("H:{}, W:{}".format(h, w))
-      disp[h, w] = disparity
+      # print("H:{}, W:{}".format(h, w))
+      # disp[h, w] = disparity
   end = time.time()
   print ("{}min {}secs later...".format(int((end-start)/60), int((end-start)%60)))
   return disp
+
 
 def project3D(dispMatrix):
   disp = dispMatrix
