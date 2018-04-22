@@ -1,11 +1,14 @@
 import numpy as np
+from threading import Thread
+import math
+import scipy.spatial as sp
 import cv2
-
+import time
 
 imgL = cv2.pyrDown(cv2.imread('./imgs-estereo/aloeL.png', cv2.IMREAD_GRAYSCALE))
 imgR = cv2.pyrDown(cv2.imread('./imgs-estereo/aloeR.png', cv2.IMREAD_GRAYSCALE))
 
-window_size = 9
+window_size = 3
 min_disp = 0
 max_disp = 112
 
@@ -16,6 +19,32 @@ def normalize(matrix):
   mat = mat - min_mat
   mat = mat/max_mat
   return mat
+
+def computeDisparity(imgL, imgR, k, maxshift):
+  start = time.time()
+  print ("staring at {}".format(start))
+  disp = np.zeros(imgL.shape) 
+  b = int (k/2)
+  l, c = imgL.shape
+  
+  for h in range (b, l-b-1):
+    for w in range(b, c-b-1):
+      template = imgL[h-b:h+b+1, w-b:w+b+1]
+      disparity = 0
+      cost = math.inf
+      for shift in range(0, maxshift):
+        window = imgR[h-b:h+b+1, (w+shift)-b:(w+shift)+b+1]
+        if (window.shape == template.shape):
+          sad = (abs(template-window)).sum()
+          if sad < cost:
+            cost = sad
+            disparity = shift
+        
+      print("H:{}, W:{}".format(h, w))
+      disp[h, w] = disparity
+  end = time.time()
+  print ("{}min {}secs later...".format(int((end-start)/60), int((end-start)%60)))
+  return disp
 
 def project3D(dispMatrix):
   disp = dispMatrix
@@ -31,10 +60,10 @@ def project3D(dispMatrix):
       yL = h
       yR = h 
       if not (xL-xR==0):     
-        X = b*(xL+xR)/2*(xL-xR)
-        Y = b*(yL+yR)/2*(xL-xR)
-        Z = b*f/(xL-xR)
-      world[h,w] = [X, Y, Z]
+        X = (b*(xL+xR))/(2*(xL-xR))
+        Y = (b*(yL+yR))/(2*(xL-xR))
+        Z = (b*f)/(xL-xR)
+        world[h,w] = [X, Y, Z]
   return world
 # stereo = cv2.StereoSGBM_create(minDisparity=min_disp,
 #                         numDisparities=max_disp,
@@ -52,19 +81,14 @@ stereo = cv2.StereoBM_create(
                              blockSize=window_size
                              )
 print ('computing disparity...')
-disp = stereo.compute(imgL, imgR)
-disparity_visual = np.zeros((disp.shape), dtype=np.uint8)
-cv2.normalize(
-    disp, disparity_visual, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-bsImg = np.array(disparity_visual)
+# disp = stereo.compute(imgL, imgR)
+disp = computeDisparity(imgL, imgR, window_size, max_disp)
+cv2.imwrite('disparity.png', disp)
+bsImg = (disp-disp.min())/disp.max()
 
-print ('imageL shape', imgL.shape)
-print('disp shape', disp.shape)
 world = project3D(disp)
-print ('world shape', world.shape)
 depth = world[:,:,2]
 depth = (depth-depth.min())
-print('depth shape', depth.shape)
 print ('depth min', depth.min())
 print('depth max', depth.max())
 depth = (depth/depth.max())
@@ -80,34 +104,3 @@ while(True):
         break
 
 cv2.destroyAllWindows()
-
-# print (disparity.shape)
-# print(disparity)
-# while(True):
-#   cv2.imshow('Depth', disparity)
-#   k = cv2.waitKey(60) & 0xFF
-#   if k == 27:    # Esc key to stop
-#     break
-
-# w, h, c = left.shape
-# k = 3   # kernel size 
-# h_k = 1 # half k
-# # #matrix w, h, (x', cost)
-# disparity_matrix = np.full((w,h,2), math.inf, dtype = np.float32)
-# max_disparity = 15
-# for i in range(h_k, h-h_k):
-#   for j in range(h_k, h-h_k):
-#     template = left[j-h_k:j+h_k+1, i-h_k:i+h_k+1]
-#     for d in range(0,max_disparity):
-#       candidate = right[j+d-h_k: j+d+h_k+1, i-h_k: i+h_k+1]
-#       print (template.shape)
-#       print (candidate.shape)
-#       candidate_cost = sp.distance_matrix(template.reshape(k*k,3), candidate.reshape(k*k,3), p=1)
-#       print (candidate_cost)
-#       # if (candidate_cost < disparity_matrix(j, i, [1])):
-#       #   disparity_matrix[j, i, 0] = j+d
-#       #   disparity_matrix[j, i, 1] = candidate_cost
-
-# print (disparity_matrix.shape)
-# print (disparity_matrix)
-
