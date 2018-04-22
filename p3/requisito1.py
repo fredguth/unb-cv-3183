@@ -1,12 +1,11 @@
 import numpy as np
 from threading import Thread
-import math
 import scipy.spatial as sp
 import cv2
 import time
 
-imgL = cv2.pyrDown(cv2.imread('./imgs-estereo/aloeL.png', cv2.IMREAD_GRAYSCALE))
-imgR = cv2.pyrDown(cv2.imread('./imgs-estereo/aloeR.png', cv2.IMREAD_GRAYSCALE))
+imgL = cv2.pyrDown(cv2.imread('./imgs-estereo/aloeL.png', cv2.IMREAD_COLOR))
+imgR = cv2.pyrDown(cv2.imread('./imgs-estereo/aloeR.png', cv2.IMREAD_COLOR))
 
 window_size = 3
 min_disp = 0
@@ -21,10 +20,10 @@ def normalize(matrix):
   return mat
 
 
-def scan_line(line, imgL, imgR, window_size, width, height):
-    disp = np.zeros((width-window_size), dtype=np.float16) #unint8?
-    if line % 20 == 0:
-        print('{}% done'.format((line / (height - window_size)) * 100))
+def scanLine(line, imgL, imgR, window_size, width, height):
+    disp = np.zeros((width-window_size), dtype=np.uint8) 
+    if line % 50 == 0:
+        print('{}% done'.format(int((line / (height - window_size)) * 100)))
 
     for column in range(width - window_size):
         template = imgL[line:(line + window_size), column:(column + window_size)]
@@ -36,38 +35,18 @@ def scan_line(line, imgL, imgR, window_size, width, height):
 
         match = cv2.matchTemplate(strip, template, cv2.TM_SQDIFF)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
-
-        disp[column] = (column - start) - min_loc[0]
-    #     x_r = strip_start + min_loc[0]
-    #     if (min_val/window_size**2 < THRESHOLD) and (column - x_r) > 10:  # only OK matches
-    #         # X = (BASE_LINE * (column + x_r))/(2 * (column - x_r))
-    #         # Y = (BASE_LINE * (2 * line))/(2 * (column - x_r))
-    #         Z = (BASE_LINE * FOCAL_LENGTH)/(column - x_r)
-    #         depth_vet[x_l] = Z
-    # return depth_vet
+        # if (min_val/window_size**2 < THRESHOLD):
+        if (min_val/window_size**2 < 255):
+          disp[column] = (column - start) - min_loc[0]
+   
     return disp
     
 def computeDisparity(imgL, imgR, k, maxshift):
   start = time.time()
-  print ("staring at {}".format(start))
-  disp = np.zeros(imgL.shape) 
-  l, c = imgL.shape
+  l, c, _ = imgL.shape
+  disp = np.zeros((l,c), np.uint8)
   for h in range (l-window_size):
-    disp[h, window_size:c] = scan_line(h, imgL, imgR, window_size, c, l)
-    # for w in range(b, c-b-1):
-    #   template = imgL[h-b:h+b+1, w-b:w+b+1]
-    #   disparity = 0
-    #   cost = math.inf
-    #   for shift in range(0, maxshift):
-    #     window = imgR[h-b:h+b+1, (w+shift)-b:(w+shift)+b+1]
-    #     if (window.shape == template.shape):
-    #       sad = (abs(template-window)).sum()
-    #       if sad < cost:
-    #         cost = sad
-    #         disparity = shift
-        
-      # print("H:{}, W:{}".format(h, w))
-      # disp[h, w] = disparity
+    disp[h, window_size:c] = scanLine(h, imgL, imgR, window_size, c, l)
   end = time.time()
   print ("{}min {}secs later...".format(int((end-start)/60), int((end-start)%60)))
   return disp
@@ -77,7 +56,7 @@ def project3D(dispMatrix):
   disp = dispMatrix
   l, c = disp.shape
   # print (h,2)
-  world = np.zeros((l, c, 3), np.float32)
+  world = np.full((l, c, 3), np.inf, np.float32)
   b = 120
   f = 25
   for h in range(0,l):
@@ -92,6 +71,7 @@ def project3D(dispMatrix):
         Z = (b*f)/(xL-xR)
         world[h,w] = [X, Y, Z]
   return world
+ 
 # stereo = cv2.StereoSGBM_create(minDisparity=min_disp,
 #                         numDisparities=max_disp,
 #                         blockSize=window_size,
@@ -102,32 +82,16 @@ def project3D(dispMatrix):
 #                         speckleWindowSize=100,
 #                         speckleRange=32
 #                         )
-stereo = cv2.StereoBM_create(
-                             numDisparities=max_disp
-                             ,
-                             blockSize=window_size
-                             )
+# stereo = cv2.StereoBM_create(
+#                              numDisparities=max_disp
+#                              ,
+#                              blockSize=window_size
+#                              )
 print ('computing disparity...')
 # disp = stereo.compute(imgL, imgR)
 disp = computeDisparity(imgL, imgR, window_size, max_disp)
-cv2.imwrite('disparity.png', disp)
-bsImg = (disp-disp.min())/disp.max()
+fs_write = cv2.FileStorage(
+    'disparity.xml', cv2.FILE_STORAGE_WRITE)
+fs_write.write('Disparity', disp)
+fs_write.release()
 
-world = project3D(disp)
-depth = world[:,:,2]
-depth = (depth-depth.min())
-print ('depth min', depth.min())
-print('depth max', depth.max())
-depth = (depth/depth.max())
-
-
-cv2.imshow('basic', bsImg)
-cv2.imshow('depth', depth)
-
-while(True):
-
-  k = cv2.waitKey(60) & 0xFF
-  if k == 27:    # Esc key to stop
-        break
-
-cv2.destroyAllWindows()
