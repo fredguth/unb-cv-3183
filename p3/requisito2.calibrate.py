@@ -8,8 +8,16 @@ board_w = 8  # horizontal enclosed corners on chessboard
 board_h = 6  # vertical enclosed corners on chessboard
 square = 2.74
 
-object_points = np.zeros((board_h*board_w, 3), np.float32)
-object_points[:, :2] = np.mgrid[0:board_w, 0:board_h].T.reshape(-1, 2)*square
+# prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(board_w-1,board_h-1,0)
+objp = np.zeros((board_h*board_w, 3), np.float32)
+objp[:, :2] = np.mgrid[0:board_w, 0:board_h].T.reshape(-1, 2)*square
+
+# Arrays to store object points and image points from all the images.
+object_points = []  # 3d point in real world space
+imgL_points = []  # 2d points in image plane.
+imgR_points = []  # 2d points in image plane.
+
+
 
 R = None
 t = None
@@ -118,6 +126,32 @@ def project3D(point):
 
     return W
 
+def calibrateStereo(imgL, imgR):
+  image_size = imgL.shape
+  find_chessboard_flags = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_FAST_CHECK
+
+  left_found, left_corners = cv2.findChessboardCorners(
+      imgL, (board_w, board_h), flags=find_chessboard_flags)
+  right_found, right_corners = cv2.findChessboardCorners(
+      imgR, (board_w, board_h), flags=find_chessboard_flags)
+
+  if left_found:
+      cv2.cornerSubPix(left_img, left_corners, (11,11), (-1,-1), criteria)
+  if right_found:
+      cv2.cornerSubPix(right_img, right_corners, (11,11), (-1,-1), criteria)
+
+  if left_found and right_found:
+      imgL_points.append(left_corners)
+      imgR_points.append(right_corners)
+      object_points.append(objp)
+  stereocalib_criteria = (cv2.TERM_CRITERIA_MAX_ITER +
+                          cv2.TERM_CRITERIA_EPS, 100, 1e-5)
+
+
+  stereocalib_flags = cv2.CALIB_FIX_ASPECT_RATIO | cv2.CALIB_ZERO_TANGENT_DIST | cv2.CALIB_SAME_FOCAL_LENGTH | cv2.CALIB_RATIONAL_MODEL | cv2.CALIB_FIX_K3 | cv2.CALIB_FIX_K4 | cv2.CALIB_FIX_K5
+  ret, cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2, R, T, E, F = cv2.stereoCalibrate(
+    object_points, imgL_points, imgR_points, image_size, criteria=stereocalib_criteria, flags=stereocalib_flags)
+  
 def calculateExtrinsics(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     global object_points
@@ -154,6 +188,7 @@ def calculateExtrinsics(image):
 
 while(capture.isOpened()):
     _, image = capture.read()
+    image = cv2.flip(image, 1)  # mirrors image
     h,  w = image.shape[:2]
     newcameraintrinsic, roi = cv2.getOptimalNewCameraMatrix(
         intrinsic, distCoeff, (w, h), 1, (w, h))
@@ -182,9 +217,6 @@ while(capture.isOpened()):
         print('erro')
         h, w = dst.shape
         dst = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-    
-    cv2.putText(dst, "Saving:{}".format(saving), (w-200, 40),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
     cv2.putText(dst, "Distance:{} cm".format(distance), (w-200, 20),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
     cv2.imshow('Undistorted', dst)
@@ -193,24 +225,19 @@ while(capture.isOpened()):
     if k==27:    # Esc key to stop
         break
     if k == ord("l"):  # l -> save left
-        count += 1
-        
+        count = 0
         saving = True
         side = "LEFT"
     if k == ord("r"):
-        count += 1
-        
+        count = 0
         saving = True
         side = "RIGHT"
     if k == 32: #space => stop saving
-        
         saving = False
 
-    if (saving and goodResult) or (saving and k== ord("b")):
+    if saving and goodResult:
         count += 1
         goodResult = False
-        
-        saving = False
         filename = './results/extr-{}-{}-gray-undistorted.png'.format(side, count)
         cv2.imwrite(filename, dst)
         filename = './results/extr-{}-{}-color-undistorted.png'.format(side, count)
