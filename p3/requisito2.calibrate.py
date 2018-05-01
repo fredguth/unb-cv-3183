@@ -1,252 +1,167 @@
-import numpy as np
-import pandas as pd
+# Based on https://gist.github.com/jensenb
 import cv2
-import os
+import numpy as np
+
+def in_front_of_both_cameras(left_points, right_points, rot, trans):
+    # check if the point correspondences are in front of both images
+    rot_inv = rot
+    
+    for left, right in zip(left_points, right_points):
+        left_z = np.dot(rot[0, :] - right[0]*rot[2, :], trans) / np.dot(rot[0, :] - right[0]*rot[2, :], right)
+        left_3d_point = np.array([left[0] * left_z, right[0] * left_z, left_z])
+        right_3d_point = np.dot(rot.T, left_3d_point) - np.dot(rot.T, trans)
+
+        if left_3d_point[2] < 0 or right_3d_point[2] < 0:
+            return False
+
+    return True
 
 
-board_w = 8  # horizontal enclosed corners on chessboard
-board_h = 6  # vertical enclosed corners on chessboard
-square = 2.74
+# load stereo images
+imgL = cv2.imread("./results/imgR.png")
+imgR = cv2.imread("./results/imgL.png")
 
-# prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(board_w-1,board_h-1,0)
-objp = np.zeros((board_h*board_w, 3), np.float32)
-objp[:, :2] = np.mgrid[0:board_w, 0:board_h].T.reshape(-1, 2)*square
-
-# Arrays to store object points and image points from all the images.
-object_points = []  # 3d point in real world space
-imgL_points = []  # 2d points in image plane.
-imgR_points = []  # 2d points in image plane.
-
-
-
-R = None
-t = None
-distance = 0
-
-
+# get camera parameters
 fs_read = cv2.FileStorage('./exp-0/Intrinsics.xml', cv2.FILE_STORAGE_READ)
-intrinsic = fs_read.getNode('Intrinsics').mat()
+K = fs_read.getNode('Intrinsics').mat()
 fs_read.release()
 fs_read = cv2.FileStorage('./exp-0/Distortion.xml', cv2.FILE_STORAGE_READ)
-distCoeff = fs_read.getNode('DistCoeffs').mat()
+d = fs_read.getNode('DistCoeffs').mat()
 fs_read.release()
-count = 0
 
-capture = cv2.VideoCapture(0)
-capture.set(cv2.CAP_PROP_FPS, 15)
-capture.set(3, 640)
-capture.set(4, 360)
-cv2.namedWindow('Raw')
-cv2.namedWindow("Undistorted")
+K_inv = np.linalg.inv(K)
+
+# images already undistorted when captured
+imgL_undist = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY)
+imgR_undist = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY)
 
 
-raw = {
-    "isMeasuring": False,
-    "p1": np.asarray([-1, -1]),
-    "p2": np.asarray([-1, -1])
-}
-undistorted = {
-    "isMeasuring": False,
-    "p1": np.asarray([-1, -1]),
-    "p2": np.asarray([-1, -1])
-}
+# generate lists of correspondences
+# image_size = imgL.shape
+# find_chessboard_flags = cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE + cv2.CALIB_CB_FAST_CHECK
 
-saving = False
-side = "None"
-goodResult = False
-criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+# left_found, left_corners = cv2.findChessboardCorners(imgL_undist, (8, 6), flags=find_chessboard_flags)
+# right_found, right_corners = cv2.findChessboardCorners(imgR_undist, (8, 6), flags=find_chessboard_flags)
 
+# criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+# if left_found and (len(left_corners)==48):
+#     print('Left corners found')
+#     cv2.cornerSubPix(imgL_undist, left_corners, (11, 11), (-1, -1), criteria)
+#     tempL = imgL_undist
+#     tempL = cv2.cvtColor(tempL, cv2.COLOR_GRAY2BGR)
+#     tempL = cv2.drawChessboardCorners(tempL, (8, 6), left_corners, left_found)
+#     # cv2.imshow('left', tempL)
+# else:
+#     print('Left corners not found')
+# if right_found and (len(right_corners) == 48):
+#     print('Right corners  found')
+#     cv2.cornerSubPix(imgR_undist, right_corners, (11, 11), (-1, -1), criteria)
+#     tempR = imgR_undist
+#     tempR = cv2.cvtColor(tempR, cv2.COLOR_GRAY2BGR)
+#     tempR = cv2.drawChessboardCorners(tempR, (8, 6), right_corners, right_found)
+#     # cv2.imshow('right', tempR)
+# else:
+#     print ('Right corners not found')
 
-def mouse_callback(event, column, line, flags, params):
-
-    if event == 1:  # left button in my mac
-        params["isMeasuring"] = not params["isMeasuring"]
-        if (params["isMeasuring"]):
-            # first point
-            params["p1"] = np.asarray([column, line])
-            params["p2"] = np.asarray([-1, -1])
-        else:
-            # second point
-            p1 = params["p1"]
-            p2 = np.asarray([column, line])
-            params["p2"] = p2
-
-
-def drawLine(img, data, color):
-    p1 = data["p1"]
-    p2 = data["p2"]
-    if (p2[0] > 0):
-        p1_3D = project3D(p1)
-        p2_3D = project3D(p2)
-        dist = np.linalg.norm(p2-p1)
-        dist3D = np.linalg.norm(p2_3D-p1_3D)
-
-        if img.size <= 640 * 480:
-            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-
-        cv2.line(img, tuple(p1), tuple(p2), color, 2)
-        print("p1, p2: {}, {}".format(p1, p2))
-
-        h, w, c = img.shape
-
-        cv2.putText(img, "{} pixels".format(dist), (10, h-20),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA)
-        cv2.putText(img, "{} cm".format(dist3D), (10, h-40),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1, cv2.LINE_AA)
-        print("dist:{}".format(dist))
-        print("dist3D:{}".format(dist3D))
-    return img
+# left_match_points = left_corners[:, 0, :]
+# right_match_points = right_corners[:, 0, :]
 
 
-def calcP():
-    P = np.zeros((4, 4), np.float32)
-    K = np.zeros((3, 4), np.float32)
-    K[:, :-1] = intrinsic
+detector = cv2.xfeatures2d.SURF_create(250)
+left_key_points, left_descriptors = detector.detectAndCompute(
+    imgL_undist, None)
+right_key_points, right_descriptos = detector.detectAndCompute(
+    imgR_undist, None)
+# imgL_undist = cv2.drawKeypoints(imgL_undist, left_key_points, None)
+# cv2.imshow('left', imgL_undist)
+# imgR_undist = cv2.drawKeypoints(imgR_undist, right_key_points, None)
+# cv2.imshow('right', imgR_undist)
+# match descriptors
+matcher = cv2.BFMatcher(cv2.NORM_L1, True)
+matches = matcher.match(left_descriptors, right_descriptos)
 
-    if not distance == 0:
-        zeros = np.zeros(4)
-        zeros[-1] = 1
-        Rt = np.hstack((R, t))
-        Rt = np.vstack((Rt, zeros))
-        P = K @ Rt
-
-    return P
-
-
-def project3D(point):
-    print('**** point', point)
-    cam = np.ones(3)  # x
-    cam[:-1] = point
-    P = calcP()
-    P = np.delete(P, 2, 1)  # delete 3rd column
-    W = np.linalg.inv(P) @ cam
-    W = W / W[2]
-    W[2] = 0
-    # X = X/w, Y = Y/w, Z = 0, w not needed
-
-    return W
-
-def calibrateStereo(imgL, imgR):
-  image_size = imgL.shape
-  find_chessboard_flags = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_FAST_CHECK
-
-  left_found, left_corners = cv2.findChessboardCorners(
-      imgL, (board_w, board_h), flags=find_chessboard_flags)
-  right_found, right_corners = cv2.findChessboardCorners(
-      imgR, (board_w, board_h), flags=find_chessboard_flags)
-
-  if left_found:
-      cv2.cornerSubPix(left_img, left_corners, (11,11), (-1,-1), criteria)
-  if right_found:
-      cv2.cornerSubPix(right_img, right_corners, (11,11), (-1,-1), criteria)
-
-  if left_found and right_found:
-      imgL_points.append(left_corners)
-      imgR_points.append(right_corners)
-      object_points.append(objp)
-  stereocalib_criteria = (cv2.TERM_CRITERIA_MAX_ITER +
-                          cv2.TERM_CRITERIA_EPS, 100, 1e-5)
+# generate lists of point correspondences
+left_match_points = np.zeros((len(matches), 2), dtype=np.float32)
+right_match_points = np.zeros_like(left_match_points)
 
 
-  stereocalib_flags = cv2.CALIB_FIX_ASPECT_RATIO | cv2.CALIB_ZERO_TANGENT_DIST | cv2.CALIB_SAME_FOCAL_LENGTH | cv2.CALIB_RATIONAL_MODEL | cv2.CALIB_FIX_K3 | cv2.CALIB_FIX_K4 | cv2.CALIB_FIX_K5
-  ret, cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2, R, T, E, F = cv2.stereoCalibrate(
-    object_points, imgL_points, imgR_points, image_size, criteria=stereocalib_criteria, flags=stereocalib_flags)
-  
-def calculateExtrinsics(image):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    global object_points
-    global R
-    global t
-    global distance
-    global goodResult
-    found, corners = cv2.findChessboardCorners(
-        image, (board_w, board_h), cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE)
-    # If found corners, refine
-    if found == True:
-        corners = cv2.cornerSubPix(
-            image, corners, (11, 11), (-1, -1), criteria)
-        if (corners.shape[0] == 48):
-            goodResult = True
-            # cv2.solvePnPRansac(objectPoints, imagePoints, cameraMatrix, distCoeffs[, rvec[, tvec[, useExtrinsicGuess[, iterationsCount[, reprojectionError[, minInliersCount[, inliers[, flags]]]]]]]])
-            # ret, r, t, inliners = cv2.solvePnPRansac(object_points, corners, intrinsic, distCoeff,None, None, True, 500, )
+img = cv2.drawMatches(imgL_undist, left_key_points, imgR_undist, right_key_points, matches, imgL_undist)
+cv2.imshow('matches', img)
+for i in range(len(matches)):
+    left_match_points[i] = left_key_points[matches[i].queryIdx].pt
+    right_match_points[i] = right_key_points[matches[i].trainIdx].pt
 
-            ret, rvec, t = cv2.solvePnP(object_points, corners, intrinsic,
-                                        distCoeff, None, None, False, cv2.SOLVEPNP_ITERATIVE)
+# estimate fundamental matrix
+F, mask = cv2.findFundamentalMat(
+    left_match_points, right_match_points, cv2.FM_RANSAC, 0.1, 0.99)
 
-            R, j = cv2.Rodrigues(rvec)
-            C = np.matmul(np.linalg.inv(-R), t)
-            distance = np.linalg.norm(C)
-            # distance = np.linalg.norm(t)
+# decompose into the essential matrix
+E = K.T.dot(F).dot(K)
 
-            image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-            image = cv2.drawChessboardCorners(
-                image, (board_w, board_h), corners, found)
-    else:
-        image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-    return image
+# decompose essential matrix into R, t (See Hartley and Zisserman 9.13)
+U, S, Vt = np.linalg.svd(E)
+W = np.array([0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]).reshape(3, 3)
 
 
-while(capture.isOpened()):
-    _, image = capture.read()
-    image = cv2.flip(image, 1)  # mirrors image
-    h,  w = image.shape[:2]
-    newcameraintrinsic, roi = cv2.getOptimalNewCameraMatrix(
-        intrinsic, distCoeff, (w, h), 1, (w, h))
+# iterate over all correspondences used in the estimation of the fundamental matrix
+# left_matches = left_corners[:, 0, :]
+# right_matches = right_corners[:, 0, :]
+left_inliers = []
+right_inliers = []
+for i in range(len(mask)):
+    if mask[i]:
+        # normalize and homogenize the image coordinates
+        left_inliers.append(
+            K_inv.dot([left_match_points[i][0], left_match_points[i][1], 1.0]))
+        right_inliers.append(
+            K_inv.dot([right_match_points[i][0], right_match_points[i][1], 1.0]))
 
-    #undistort
-    color = image
-    color = cv2.undistort(color, intrinsic, distCoeff, None, newcameraintrinsic)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    dst = cv2.undistort(image, intrinsic, distCoeff, None, newcameraintrinsic)
 
-    # # crop the image
-    # x,y,w,h = roi
-    # dst = dst[y:y+h, x:x+w]
-    cv2.setMouseCallback('Raw', mouse_callback, raw)
-    cv2.setMouseCallback('Undistorted', mouse_callback, undistorted)
+# Determine the correct choice of second camera matrix
+# only in one of the four configurations will all the points be in front of both cameras
+# First choice: R = U * Wt * Vt, T = +u_3 (See Hartley Zisserman 9.19)
+R = U.dot(W).dot(Vt)
+T = U[:, 2]
+print ('1')
+if not in_front_of_both_cameras(left_inliers, right_inliers, R, T):
+    print ('2')
+    # Second choice: R = U * W * Vt, T = -u_3
+    T = - U[:, 2]
+    if not in_front_of_both_cameras(left_inliers, right_inliers, R, T):
+        print('3')
+        # Third choice: R = U * Wt * Vt, T = u_3
+        R = U.dot(W.T).dot(Vt)
+        T = U[:, 2]
 
-    image = drawLine(image, raw, (33, 255, 33))
-    cv2.imshow('Raw', image)
+        if not in_front_of_both_cameras(left_inliers, right_inliers, R, T):
+            print('4')
+            # Fourth choice: R = U * Wt * Vt, T = -u_3
+            T = - U[:, 2]
 
-    dst = calculateExtrinsics(dst)
-    dst = drawLine(dst, undistorted, (255, 33, 255))
+#perform the rectification
+R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(
+    K, d, K, d, imgL.shape[:2], R, T, alpha=1.0)
+mapx1, mapy1 = cv2.initUndistortRectifyMap(
+    K, d, R1, K, imgL.shape[:2], cv2.CV_32F)
+mapx2, mapy2 = cv2.initUndistortRectifyMap(
+    K, d, R2, K, imgR.shape[:2], cv2.CV_32F)
+img_rect1 = cv2.remap(imgL, mapx1, mapy1, cv2.INTER_LINEAR)
+img_rect2 = cv2.remap(imgR, mapx2, mapy2, cv2.INTER_LINEAR)
+# cv2.imshow('img_rect1', img_rect1)
+# cv2.imshow('img_rect2', img_rect1)
+# draw the images side by side
+total_size = (max(img_rect1.shape[0], img_rect2.shape[0]),
+              img_rect1.shape[1] + img_rect2.shape[1], 3)
+img = np.zeros(total_size, dtype=np.uint8)
+img[:img_rect1.shape[0], :img_rect1.shape[1]] = img_rect1
+img[:img_rect2.shape[0], img_rect1.shape[1]:] = img_rect2
 
-    if (dst.size > 640*480):
-        h, w, c = dst.shape
-    else:
-        print('erro')
-        h, w = dst.shape
-        dst = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-    cv2.putText(dst, "Distance:{} cm".format(distance), (w-200, 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
-    cv2.imshow('Undistorted', dst)
+# draw horizontal lines every 25 px accross the side by side image
+for i in range(20, img.shape[0], 25):
+    cv2.line(img, (0, i), (img.shape[1], i), (255, 0, 0))
 
+# cv2.imshow('rectified', img)
+while (True):
     k = cv2.waitKey(60) & 0xFF
-    if k==27:    # Esc key to stop
-        break
-    if k == ord("l"):  # l -> save left
-        count = 0
-        saving = True
-        side = "LEFT"
-    if k == ord("r"):
-        count = 0
-        saving = True
-        side = "RIGHT"
-    if k == 32: #space => stop saving
-        saving = False
-
-    if saving and goodResult:
-        count += 1
-        goodResult = False
-        filename = './results/extr-{}-{}-gray-undistorted.png'.format(side, count)
-        cv2.imwrite(filename, dst)
-        filename = './results/extr-{}-{}-color-undistorted.png'.format(side, count)
-        cv2.imwrite(filename, color)
-        fs_write = cv2.FileStorage(
-            './results/Extrinsics-{}-{}.xml'.format(side, count), cv2.FILE_STORAGE_WRITE)
-        fs_write.write('R', R)
-        fs_write.write('t', t)
-        fs_write.write('distance', distance)
-        fs_write.release()
-capture.release()
-cv2.destroyAllWindows()
+    if k == 27:    # Esc key to stop
+            cv2.destroyAllWindows()
