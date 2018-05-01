@@ -67,7 +67,7 @@ imgR_undist = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY)
 # right_match_points = right_corners[:, 0, :]
 
 
-detector = cv2.xfeatures2d.SURF_create(250)
+detector = cv2.xfeatures2d.SURF_create(400)
 left_key_points, left_descriptors = detector.detectAndCompute(
     imgL_undist, None)
 right_key_points, right_descriptos = detector.detectAndCompute(
@@ -137,18 +137,20 @@ if not in_front_of_both_cameras(left_inliers, right_inliers, R, T):
             print('4')
             # Fourth choice: R = U * Wt * Vt, T = -u_3
             T = - U[:, 2]
-
+print('imgL.shape', imgL.shape)
+print('imgL_undist.shape', imgL_undist.shape)
+print('imgL.shape[:2]', imgL.shape[:2])
 #perform the rectification
 R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(
-    K, d, K, d, imgL.shape[:2], R, T, alpha=1.0)
+    K, d, K, d, imgL_undist.shape, R, T, alpha=1.0)
 mapx1, mapy1 = cv2.initUndistortRectifyMap(
-    K, d, R1, K, imgL.shape[:2], cv2.CV_32F)
+    K, d, R1, K, imgL_undist.shape, cv2.CV_32F)
 mapx2, mapy2 = cv2.initUndistortRectifyMap(
-    K, d, R2, K, imgR.shape[:2], cv2.CV_32F)
+    K, d, R2, K, imgR_undist.shape, cv2.CV_32F)
 img_rect1 = cv2.remap(imgL, mapx1, mapy1, cv2.INTER_LINEAR)
 img_rect2 = cv2.remap(imgR, mapx2, mapy2, cv2.INTER_LINEAR)
-# cv2.imshow('img_rect1', img_rect1)
-# cv2.imshow('img_rect2', img_rect1)
+cv2.imshow('img_rect1', img_rect1)
+cv2.imshow('img_rect2', img_rect1)
 # draw the images side by side
 total_size = (max(img_rect1.shape[0], img_rect2.shape[0]),
               img_rect1.shape[1] + img_rect2.shape[1], 3)
@@ -160,7 +162,7 @@ img[:img_rect2.shape[0], img_rect1.shape[1]:] = img_rect2
 for i in range(20, img.shape[0], 25):
     cv2.line(img, (0, i), (img.shape[1], i), (255, 0, 0))
 
-# cv2.imshow('rectified', img)
+cv2.imshow('rectified', img)
 while (True):
     k = cv2.waitKey(60) & 0xFF
     if k == 27:    # Esc key to stop
