@@ -150,7 +150,7 @@ mapx2, mapy2 = cv2.initUndistortRectifyMap(
 img_rect1 = cv2.remap(imgL, mapx1, mapy1, cv2.INTER_LINEAR)
 img_rect2 = cv2.remap(imgR, mapx2, mapy2, cv2.INTER_LINEAR)
 cv2.imshow('img_rect1', img_rect1)
-cv2.imshow('img_rect2', img_rect1)
+cv2.imshow('img_rect2', img_rect2)
 # draw the images side by side
 total_size = (max(img_rect1.shape[0], img_rect2.shape[0]),
               img_rect1.shape[1] + img_rect2.shape[1], 3)
