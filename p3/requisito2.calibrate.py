@@ -31,65 +31,40 @@ fs_read.release()
 
 K_inv = np.linalg.inv(K)
 
-# images already undistorted when captured
-imgL_undist = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY)
-imgR_undist = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY)
-
 
 # generate lists of correspondences
-# image_size = imgL.shape
-# find_chessboard_flags = cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE + cv2.CALIB_CB_FAST_CHECK
-
-# left_found, left_corners = cv2.findChessboardCorners(imgL_undist, (8, 6), flags=find_chessboard_flags)
-# right_found, right_corners = cv2.findChessboardCorners(imgR_undist, (8, 6), flags=find_chessboard_flags)
-
-# criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-# if left_found and (len(left_corners)==48):
-#     print('Left corners found')
-#     cv2.cornerSubPix(imgL_undist, left_corners, (11, 11), (-1, -1), criteria)
-#     tempL = imgL_undist
-#     tempL = cv2.cvtColor(tempL, cv2.COLOR_GRAY2BGR)
-#     tempL = cv2.drawChessboardCorners(tempL, (8, 6), left_corners, left_found)
-#     # cv2.imshow('left', tempL)
-# else:
-#     print('Left corners not found')
-# if right_found and (len(right_corners) == 48):
-#     print('Right corners  found')
-#     cv2.cornerSubPix(imgR_undist, right_corners, (11, 11), (-1, -1), criteria)
-#     tempR = imgR_undist
-#     tempR = cv2.cvtColor(tempR, cv2.COLOR_GRAY2BGR)
-#     tempR = cv2.drawChessboardCorners(tempR, (8, 6), right_corners, right_found)
-#     # cv2.imshow('right', tempR)
-# else:
-#     print ('Right corners not found')
-
-# left_match_points = left_corners[:, 0, :]
-# right_match_points = right_corners[:, 0, :]
-
-
-detector = cv2.xfeatures2d.SURF_create(400)
+detector = cv2.xfeatures2d.SIFT_create()
 left_key_points, left_descriptors = detector.detectAndCompute(
-    imgL_undist, None)
+    imgL, None)
 right_key_points, right_descriptos = detector.detectAndCompute(
-    imgR_undist, None)
-# imgL_undist = cv2.drawKeypoints(imgL_undist, left_key_points, None)
-# cv2.imshow('left', imgL_undist)
-# imgR_undist = cv2.drawKeypoints(imgR_undist, right_key_points, None)
-# cv2.imshow('right', imgR_undist)
+    imgR, None)
+
+
 # match descriptors
-matcher = cv2.BFMatcher(cv2.NORM_L1, True)
-matches = matcher.match(left_descriptors, right_descriptos)
+FLANN_INDEX_KDTREE = 0
+index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
+search_params = dict(checks = 50)
+flann = cv2.FlannBasedMatcher(index_params, search_params)
 
-# generate lists of point correspondences
-left_match_points = np.zeros((len(matches), 2), dtype=np.float32)
-right_match_points = np.zeros_like(left_match_points)
+matches = flann.knnMatch(left_descriptors, right_descriptos, k=2)
+# Need to draw only good matches, so create a mask
+good_matches = []
+# ratio test as per Lowe's paper
+for m, n in matches:
+    if m.distance < 0.55*n.distance:
+        good_matches.append(m)
 
-
-img = cv2.drawMatches(imgL_undist, left_key_points, imgR_undist, right_key_points, matches, imgL_undist)
+left_match_points = np.float32([left_key_points[m.queryIdx].pt for m in good_matches]).reshape(-1,1,2)
+right_match_points = np.float32(
+    [right_key_points[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
+print ('left_match_points', left_match_points.shape)
+draw_params = dict( matchColor = (0,255,0),
+                    singlePointColor = None,
+                    matchesMask = None,
+                    flags = 2)
+img = cv2.drawMatches(imgL, left_key_points, imgR, right_key_points, good_matches, None, **draw_params)
 cv2.imshow('matches', img)
-for i in range(len(matches)):
-    left_match_points[i] = left_key_points[matches[i].queryIdx].pt
-    right_match_points[i] = right_key_points[matches[i].trainIdx].pt
+
 
 # estimate fundamental matrix
 F, mask = cv2.findFundamentalMat(
@@ -104,10 +79,10 @@ W = np.array([0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]).reshape(3, 3)
 
 
 # iterate over all correspondences used in the estimation of the fundamental matrix
-# left_matches = left_corners[:, 0, :]
-# right_matches = right_corners[:, 0, :]
 left_inliers = []
 right_inliers = []
+left_match_points = left_match_points[:,0,:]
+right_match_points = right_match_points[:, 0, :]
 for i in range(len(mask)):
     if mask[i]:
         # normalize and homogenize the image coordinates
@@ -117,7 +92,10 @@ for i in range(len(mask)):
             K_inv.dot([right_match_points[i][0], right_match_points[i][1], 1.0]))
 
 
-# Determine the correct choice of second camera matrix
+# #perform the rectification
+# R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(
+#     K, d, K, d, imgL.shape, R, T, alpha=1.0)
+# mapx1, mapy1 = cv2.initUndi# Determine the correct choice of second camera matrix
 # only in one of the four configurations will all the points be in front of both cameras
 # First choice: R = U * Wt * Vt, T = +u_3 (See Hartley Zisserman 9.19)
 R = U.dot(W).dot(Vt)
@@ -137,32 +115,28 @@ if not in_front_of_both_cameras(left_inliers, right_inliers, R, T):
             print('4')
             # Fourth choice: R = U * Wt * Vt, T = -u_3
             T = - U[:, 2]
-print('imgL.shape', imgL.shape)
-print('imgL_undist.shape', imgL_undist.shape)
-print('imgL.shape[:2]', imgL.shape[:2])
-#perform the rectification
-R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(
-    K, d, K, d, imgL_undist.shape, R, T, alpha=1.0)
+print ('R', R)
+print ('T', T)
 mapx1, mapy1 = cv2.initUndistortRectifyMap(
-    K, d, R1, K, imgL_undist.shape, cv2.CV_32F)
+    K, d, R, K, imgL.shape, cv2.CV_32F)
 mapx2, mapy2 = cv2.initUndistortRectifyMap(
-    K, d, R2, K, imgR_undist.shape, cv2.CV_32F)
+    K, d, R2, K, imgR.shape, cv2.CV_32F)
 img_rect1 = cv2.remap(imgL, mapx1, mapy1, cv2.INTER_LINEAR)
 img_rect2 = cv2.remap(imgR, mapx2, mapy2, cv2.INTER_LINEAR)
 cv2.imshow('img_rect1', img_rect1)
 cv2.imshow('img_rect2', img_rect2)
-# draw the images side by side
-total_size = (max(img_rect1.shape[0], img_rect2.shape[0]),
-              img_rect1.shape[1] + img_rect2.shape[1], 3)
-img = np.zeros(total_size, dtype=np.uint8)
-img[:img_rect1.shape[0], :img_rect1.shape[1]] = img_rect1
-img[:img_rect2.shape[0], img_rect1.shape[1]:] = img_rect2
+# # draw the images side by side
+# total_size = (max(img_rect1.shape[0], img_rect2.shape[0]),
+#               img_rect1.shape[1] + img_rect2.shape[1], 3)
+# img = np.zeros(total_size, dtype=np.uint8)
+# img[:img_rect1.shape[0], :img_rect1.shape[1]] = img_rect1
+# img[:img_rect2.shape[0], img_rect1.shape[1]:] = img_rect2
 
-# draw horizontal lines every 25 px accross the side by side image
-for i in range(20, img.shape[0], 25):
-    cv2.line(img, (0, i), (img.shape[1], i), (255, 0, 0))
+# # draw horizontal lines every 25 px accross the side by side image
+# for i in range(20, img.shape[0], 25):
+#     cv2.line(img, (0, i), (img.shape[1], i), (255, 0, 0))
 
-cv2.imshow('rectified', img)
+# # cv2.imshow('rectified', img)
 while (True):
     k = cv2.waitKey(60) & 0xFF
     if k == 27:    # Esc key to stop
