@@ -5,9 +5,8 @@ from fastai.model import *
 from fastai.dataset import *
 from fastai.sgdr import *
 from fastai.plots import *
-import numpy as np
+
 import time
-import cv2
 from sklearn.model_selection import StratifiedKFold
 
 
