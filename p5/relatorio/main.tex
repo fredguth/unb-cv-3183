@@ -1,0 +1,274 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{multirow}
+\usepackage{subfig}
+
+\usepackage[english,ngerman,brazilian]{babel}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{PD5 - Reconhecimento de Objetos}
+
+\author{\IEEEauthorblockN{Frederico Guth (18/0081641)}
+\IEEEauthorblockA{\textit{Tópicos em Sistemas de Computação, ,} \\
+\textit{Turma TC - Visão Computacional (PPGI)}\\
+\textit{Universidade de Brasília}\\
+Brasília, Brasil\\
+fredguth@fredguth.com}
+}
+
+\maketitle
+
+\begin{abstract}
+Detecção de pele lida com o reconhecimento dos
+pixels que representam pele em uma dada imagem. Cor é frequentemente usada por ser invariante a orientacao, tamanho e ser
+fácil de processar. Neste projeto, detectamos cor de pele usando
+tres tipos de classificadores: por limiarizacao, bayesiano simples
+e k-nn. Os resultados comparam qualidade da segmentação em
+relação ao tempo de execução dos algoritmos. 
+\end{abstract}
+
+\begin{IEEEkeywords}
+deteção de pele, espaço de cores, K-NN, naive bayesian, threshold-based
+\end{IEEEkeywords}
+
+\section{Introdução}
+
+Reconhecimento de Objetos lida com a identificação de objetos em imagens. Quando vemos uma imagem, podemos facilmente identificar objetos, pessoas, lugares; mas algo tão natural para nós é uma tarefa bastante complexa para um algoritmo e, até pouco tempo, com resultados nada animadores.
+
+O momento crucial no crescimento meteórico do interesse por \textit{deep learning} se deu em 2012, justamente na maior competição de reconhecimento de objetos, a  ImageNet Large Scale Visual Recognition Challenge  (ILSVRC)\cite{goodfellow}. O time liderado por Alex Krizhevsky foi o primeiro a usar redes neurais convolucionais profundas (RCPs) na competição e ganharam por larga margem\cite{alexnet}. Desde então, técnicas baseadas em RCPs tem sido as mais bem sucedidas para este problema.
+
+
+\subsection{Objetivo}
+O objetivo deste projeto é propor e avaliar um método de reconhecimento de objetos para a base de imagens CalTech-101\cite{caltech101}, com apenas 5 imagens de treinamento. 
+
+\section{Revisão Teórica}
+
+\subsection{Redes Neurais Convolucionais Profundas}
+Redes Neurais Convolucionais são modelos computacionais inspirados na biologia do cortex visual. O cortex visual tem pequenas regiões de células sensíveis a regiões específicas do campo visual\cite{hinton}.  Da mesma forma, nas RCPs filtros são convolucionados em camadas gerando novas camadas que representam onde o filtro "sensibilizou" a entrada. 
+
+A ideia é resolver o problema da representação do conhecimento introduzindo representações que são expressas em termos de outras representações mais simples\cite{goodfellow}. Em essência, um RCP é apenas uma função matemática que mapeia um conjunto de valores de entrada a valores de saída, formada pela composição de várias funções mais simples.  Com um número suficiente de composições, camadas, é possível obter funções de alta complexidade\cite{hinton, goodfellow}. 
+
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=\columnwidth]{RCP.png}
+\caption{Uma rede neural convolucional profunda}
+\end{center}
+\end{figure}
+
+Em tarefas de classificação, as camadas amplificam características da entrada que são importantes para discriminação das amostras e suprimem variações irrelevantes. Uma imagem, entra como um tensor de valores de pixel,  a primeira camada tipicamente representam a presença ou ausência de bordas em determinadas orientações e localizações na imagem. A segunda, detecta padões simples e arranjos de bordas (vide \ref{layers}. A terceira pode compor os padrões simples em combinações maiores que correspondem com partes de objetos, as camadas subsequentes irão detectar objetos como combinações dessas partes\cite{hinton}.
+\begin{figure}[ht!]
+\label{layers}
+\begin{center}
+\includegraphics[width=\columnwidth]{layers.png}
+\caption{Visualização de caracteríticas em um modelo já treinado\cite{zeiler}}
+\end{center}
+\end{figure}
+
+
+\subsection{Transferência de Conhecimento}
+Em nosso dia a dia, transferimos conhecimento a todo momento. Aprender a tocar piano, facilita aprender tocar órgão. Reconhecer maçãs talvez ajude a reconhecer peras. Pessoas conseguem inteligentemente aplicar conhecimento prévio para resolver novos problemas com maior eficácia e eficiência\cite{sinno} E algoritmos?
+
+Pesquisa em transferêcia de conhecimento tem atraído mais e mais atenção desde 1995, quando foi tema de  um workshop na NIPS-95 que discutiu a necessidade de métodos de aprendizado de máquina que retém e reusam conhecimento previamente obtido\cite{sinno}. 
+
+No contexto de RCPs para reconhecimento visual de objetos, fica claro que as camadas iniciais: capazes de reconhecer bordas, padrões e partes de objetos, treinadas com um conjunto de imagens para reconhecer determinados rótulos\ref(layers), podem ser usadas em outro conjunto de imagens totalmente diferente ainda que os rótulos também sejam diferentes. A capacidade de utilizar os pesos resultantes de treinamentos com milhões de imagens representa uma grande economia de processamento e uma ferramenta muito útil. 
+
+
+\subsection{Hiperparâmetros}
+O aspecto fundamental do \textit{deep learning} é que as camadas de características não são extraídas manualmente por pessoas; elas são aprendidas a partir dos dados usando procedimentos de aprendizados genéricos. Como consequência, RCPs podem ser retreinadas para diferentes tarefas de reconhecimento e classificação, permitindo-se aproveitar redes pré-existentes. 
+
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=.65\columnwidth]{MLvsDL.png}
+\caption{Machine Learning versus Deep Learning}
+\end{center}
+\end{figure}
+
+Para isso, entretanto, é preciso ajustar a rede para o problema em questão. Esse ajuste é obtido variando hiperparâmetros: learning rate, número de épocas, tamanho do \textit{batch}, função de ativação, inicialização, \textit{dropout}, etc. De certa forma, pode-se pensar que até a arquitetura utilizada (ResNet, Inception, LeNet, etc) é um parâmetro.  
+
+É interessante notar que \textit{deep learning} é epistemologicamente muito mais próximo das ciências naturais do que do resto da Ciência da Computação.  Em deep learning o resultado empírico é crucial, o ajuste de hiperparâmetros pode ter tanto ou mais valor do que o desenvolvimento de novas arquiteturas e a criatividade em pensar formas de visualizar o resultados pode levar a novos insights. Sendo Ciência da Computação acostumada a presar o método dedutivo antes de tudo, tais características geram desconfiança e estranheza.  Por outro lado, abre-se caminho para novas pessoas, com outras formas de pensar.
+
+\subsection{A Base Caltech-101}
+Caltech 101 foi compilada em 2003 por Fei-Fei Li, Andreetto, Ranzato e Perona no California Institute of Technology\cite{caltech101}, com o propósito de ser utilizada para problemas de reconhecimento de objetos em imagens. A base contém 9146 imagens, divididas em 102 categorias, 101 de objetos e uma de background. 
+
+Já é uma base antiga e algumas características a tornavam boas para aquele momento, como:
+
+\begin{itemize}
+\item pouca variação de tamanho e posição do objeto de interesse;
+\item pouca oclusão;
+\item pequeno número de categorias;
+\end{itemize}
+
+mas hoje são vistas como fraquezas da mesma, uma vez que na prática, imagens como a da Caltech-101 são incomuns.
+
+Além disso, a base conta com um número bastante limitado de categorias e imagens, algumas categorias contendo apenas 31 imagens. Não sendo possível treinar com mais do que 30 imagens.
+
+Neste projeto usamos uma seleção de apenas 5 imagens de treino por categoria (510 imagens) e 2040 imagens de teste. Para validação, separamos imagens da base de treino.
+
+\section{Método}\label{metodologia}
+
+\subsection{Materiais}
+Foram utilizados:
+\begin{itemize}
+\item Servidor Paperspace/Fastai: GPU 8GB, 30GB RAM, 8 CPU
+\item NVIDIA Quadro P4000 com 1792 CUDA cores.
+\item Python 3.6.4 :: Anaconda custom (64-bit)
+\item Pytorch 0.3.0
+\item OpenCV 3.4.0
+\item 1 Notebook Jupyter
+\item 1 programa python equivalente ao Notebook.
+\end{itemize}
+Todos os arquivos do projeto estão publicamente disponíveis em  \url{git@github.com:fredguth/unb-cv-3183.git}\label{repo}
+
+\subsection{Visão Geral}
+O método de reconhecimento de objetos desenvolvido nesse projeto foi fortemente influenciado por \cite{fastai} e constitui-se das seguintes etapas:
+
+ \begin{enumerate}
+  \item Definir arquitetura RCP e obter rede pré-treinada com imagens da base ImageNet
+  \item Aumentar ao máximo a base de dados
+  \begin{itemize}
+    \item Validação Cruzada
+    \item Imagens Criadas (Data Augmentation)
+  \end{itemize}
+  \item Otimização da Taxa de Aprendizado (Learning Rate).
+  \item Otimização em Tempo de Teste
+    \begin{itemize}
+    \item Test-Time Augmentation
+    \item Test-Time model average
+   \end{itemize}
+\end{enumerate}
+
+\subsection{Arquitetura e Transferência de Aprendizado}
+
+A ResNet se provou bastante robusta para diversas tarefas de reconhecimento visual \cite{resnext}.  A motivação da sua criação veio do fato que com RCPs cada vez mais profundas surgiu um fenômeno de degradaçao que não podia ser explicado por \textit{overfitting}. A estratégia da ResNet para atacar o problema foi aumentar a profundidade da rede empilhando blocos de rede do mesmo tipo. Essa regra simplifica e reduz o número de hiperparâmetros e minimiza a degradação.
+
+Neste projeto utilizamos a arquitetura de RCP ResNet50, pré-treinada com a base ImageNet. Uma das vantagens de usar a biblioteca fast.ai\cite{fastai} é justamente a facilidade com que isso é feito. 
+
+Automaticamente, a biblioteca remove a camada final da Resnet-50 e adapta para o nosso problema onde a saída é a probabilidade de cada uma das 102 categorias. Mais especificamente, essa adaptação se dá com as seguintes camadas:
+
+% \begin{itemize}
+  % \item AdaptiveConcatPool2d
+  % \item Flatten
+  % \item BatchNorm1d (4096, momentum = 0.1)
+  % \item Dropout ( p = 0.25 )
+  % \item Linear ( in_features=4096, out_features=512 )
+  % \item ReLU
+  % \item BatchNorm1d( 512, momentum=0.1 )
+  % \item Dropout(p=0.5)
+  % \item Linear(in_features=512, out_features=102)
+  % \item LogSoftmax
+% \end{itemize}
+ 
+\subsection{Validação Cruzada}
+Validação Cruzada (Cross Validation) é uma técnica para criar uma base de validação a partir da base de treinamento. Em uma validação cruzada k-fold, a amostra original é aleatoriamente particionada em subamostra em k partes de igual tamanho, mutualmente exclusivas.  Depois do particionamento, uma das subamostras é utilizada para teste e as demais k-1 para treinamento. Ao final de k interações temos 5 modelos treinados em bases diferentes.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=.65\columnwidth]{k-fold.png}
+\caption{Validação cruzada k-fold}
+\end{center}
+\end{figure}
+\subsection{Data Augmentation}
+Uma outra forma de contornar o problema de falta de dados é adcionar dados falsos no conjunto de treinamento com características que sabemos serem similares aos dados reais. Para diversos problemas gerar dados falsos não é uma abordagem viável. Mas em problemas visuais, sabemos que podemos aplicar operações de translação, rotação, escala e alteração cromática em imagens e melhorar os resultados do treinamento.
+<imagem>
+
+\subsection{Otimização da Taxa de Aprendizado (Learning Rate)}
+
+Modelos de RCPs são normalmente treinados usando um otimizador por gradiente descendente estocástico (Stochastic Gradient Descent ou SGD). Há diversos tipos de otimizadores: Adam, RMSProp, Adagrad, etc. Todos permitem a definição da taxa de aprendizado (learning rate), que é o quanto o otimizador deve mover os pesos na direção do gradiente para um determinado mini-batch.
+
+Com uma taxa pequena, o treinamento é mais confiável, mas exige mais tempo e processamento para chegar a um valor mínimo da função de perda. Se a taxa é maior, anda-se a "passos mais largos", mas o treinamento pode não convergir ou até divergir. 
+
+Para nos guiar na decisão da taxa mais adequada para o nosso problema, usamos a técnica descrita em\cite{cyclical}: começa-se a treinar a rede com uma taxa de aprendizado bem baixa e a aumentamos exponencialmente a cada batch. 
+
+
+\begin{figure}
+\label{lr_find}
+\centering
+\subfloat {\includegraphics[width=8cm]{lr_1.png}}\hfil
+\subfloat {\includegraphics[width=8cm]{lr_2.png}}\hfil 
+
+\caption{Otimização da Taxa de Aprendizado}
+\end{figure}
+
+Na figura \ref{lr_find}-a vemos que de início a função de perda melhora muito lentamente, e depois começa a acelerar a partir de 0.001, até que por volta de 0.1 a taxa de aprendizado se torna grande demais e o treinamento diverge, ou seja, a perda começa a aumentar. 
+
+A ideia é selecionar o ponto no gráfico com a perda mais rápida. No nosso exemplo, a perda diminui rapidamente na proximidade da taxa de aprendizado 0.012 (\ref{lr_find}-b), que é a que decidimos usar. Selecionar uma boa taxa inicial para o treinamento é apenas o começo, a ideia mais interessante da técnica é como se altera a taxa de treinamento durante o treinamento.  O mais comum é definir uma taxa de decaimento, mas fugindo ao senso comum,\cite{cyclical} sugere uma variação cíclica em que a taxa de aprendizado pode sofrer aumentos repentinos. A figura \ref{cicle} mostra um gráfico com a função de variação da taxa de decaimento que usamos em nossos treinamentos.
+
+
+\begin{figure}[ht!]
+\label{cicle}
+\begin{center}
+\includegraphics[width=.75\columnwidth]{cyclical_graph.png}
+\caption{Mínimos Locais e Taxa de Aprendizado}
+\end{center}
+\end{figure}
+
+A justificativa é facilmente entendida na figura xx do próprio artigo.  A maneira convencional nos ajuda a chegar em um mínimo da função de perda que pode ser local. Já usando uma variação cíclica, podemos chegar a vários mínimos diferentes, permitindo-se até obter um mínimo global, uma ideia que, apesar do artigo não mencionar, remonta a outra mais antiga, Otimização por Recozimento Simulado (Simulated Annealing Optimization)\cite{annealing}.
+
+\section{Resultados}
+Nesta seção apresentamos os resultados obtidos. Todos os dados podem ser acessados no repositório do projeto (\ref{repo}).
+% \item  segmentação usando subconjunto da SFA (10 imagens);
+% \item  segmentação usando toda a base de imagens SFA (1118 imagens);
+% \item  análise dos resultados.
+\subsection{Segmentação usando subconjunto da SFA (10 imagens)}
+\begin{figure}[ht!]
+\label{sfa10}
+\begin{center}
+\includegraphics[width=.95\columnwidth]{2040x2040.png}
+\caption{Resultado qualitativo dos diferentes algoritmos.}
+\end{center}
+\end{figure}
+O resultado qualitativo obtido com os diferentes algoritmos pode ser apreciado em .
+
+
+\begin{table}[]
+\centering
+\caption{Base SFA 1118 imagens\\ ( 782 treinamento, 167 validação, 167 teste)}
+\label{table_sfa1118}
+\begin{tabular}{|r|c|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\multirow{2}{*}{Algoritmo}} & \multicolumn{2}{c|}{Qualidade} & \multicolumn{2}{c|}{Tempo Execução} \\ \cline{2-5} 
+\multicolumn{1}{|c|}{} & Acuidade (\%) & Jaccard (\%) & Trein. (s) & Teste (s) \\ \hline
+Nulo & 79.59 & 0.0 & 0 & 0 \\ \hline
+Lim (B) & 69.64 & 1.38 & 0 & 3.33\\ \hline
+(CbCr) & 95.03 & 77.78 & 0 & 3.01 \\ \hline
+Bayes & 94.62 & 76.77 & 364 & 77 \\ \hline
+K-nn & 94.49 & 77.00 & 406 & 1660 \\ \hline
+\end{tabular}
+\end{table}
+Para uma análise quantitativa da qualidade e do tempo de execução, temos \ref{table_sfa1118}
+\subsection{Análise dos resultados}
+Em face aos resultados obtidos, cabem algumas análises:
+\begin{enumerate}
+    \item O uso de um algoritmo nulo se mostrou muito importante, uma vez que apontou que a métrica escolhida como acuidade (pixels segmentados corretamente em relação ao total de pixels da imagem) é uma métrica muito ruim, uma vez que dado que as cores que representam pele são um pequeno cluster dentro do espaço de cores, \(P(bg)\) é muito maior, logo o algoritmo nulo consegue bons resultados de acuidade. 
+
+    O índice Jaccard é melhor nesse sentido, mas não discrimina falsos positivos de falsos negativos.
+    \item O algoritmo por limiarização CbCr apresentou um resultado quantitativo melhor do que o esperado. Já esperava-se que fosse rápido, e foi, classificando 167 imagens de teste em apenas 3 segundos. Há de se considerar o fator "sorte" na escolha dos limites para essa base. A análise qualitativa, entretanto, mostra que para amostras pequenas é razoavelmente pior do que o classificador bayesiano e o k-nn.
+    \item A limirização apenas pelo canal B em RGB tinha pouca chance de ir bem e confirmou o que esperávamos. Mais interessante foi notar que a biblioteca OpenCV\cite{OpenCV} não apresenta nenhuma diferença de tempo para carregar imagens no espaço RGB (que é o mesmo da imagem de origem) e carregar no espaço YCbCr. 
+    \item Os algoritmo bayesiano se mostrou uma alternativa mais robusta que o de limiarização, apresentando um resultado muito melhor na base pequena e bastante rápido também, levando 77 segundos para testar 167 imagens (menos de 0.5 segundo por imagem em uma CPU antiga).
+\end{enumerate}
+
+
+\section{Discussão e Conclusões}
+Neste trabalho, implementamos três algoritmos para a segmentação de cor de pele em imagens e apresentamos os diferentes custos-benefícios.Demonstramos que, em conformidade com a teoria existente, a segmentação de pele por cor usando algoritmos simples de classificação atinge bons resultados que são mais do que suficiente para diversas aplicações de pré-processamento. 
+
+% \begin{figure}[htbp]
+% \centerline{\includegraphics{fig.jpg}}
+% \caption{Example of a figure caption.}
+% \label{fig}
+% \end{figure}
+
+\selectlanguage{brazilian}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

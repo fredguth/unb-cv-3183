@@ -7,7 +7,7 @@ O objetivo desta atividade é propor e avaliar um método de reconhecimento de o
 Introdução
 Reconhecimento de Objetos lida com a identificação de objetos em imagens. Quando humanos vêem uma imagem, podem facilmente identificar objetos, pessoas, lugares;algo tão natural para nós é uma tarefa bastante complexa para um algoritmo e, até pouco tempo, com resultados nada animadores.
 
-O momento crucial no crescimento meteórico do interesse por deep learning se deu em 2012, justamente na maior competição de reconhecimento de objetos, a  ImageNet Large Scale Visual Recognition Challenge  (ILSVRC)[goodfellow]. Com o paper "ImageNet Classification with Deep Convolutional Neural Networks", Alex Krizhevsky et al foram os primeiros a usar redes neurais convolucionais profundas (RNCs) na competição e ganharam por larga margem. Desde então, técnicas baseadas em RNCs tem sido as mais bem sucedidas para este problema.
+O momento crucial no crescimento meteórico do interesse por deep learning se deu em 2012, justamente na maior competição de reconhecimento de objetos, a  ImageNet Large Scale Visual Recognition Challenge  (ILSVRC)[goodfellow]. Alex Krizhevsky et al foram os primeiros a usar redes neurais convolucionais profundas (RCPs) na competição\cite{alexnet} e ganharam por larga margem. Desde então, técnicas baseadas em RCPs tem sido as mais bem sucedidas para este problema.
 
 Redes Neurais Convolucionais Profundas
 
@@ -98,8 +98,11 @@ A ideia é selecionar o ponto no gráfico com a perda mais rápida. No nosso exe
 
 A justificativa é facilmente entendida na figura xx do próprio artigo.  A maneira convencional nos ajuda a chegar em um mínimo da função de perda que pode ser local. Já usando uma variação cíclica, podemos chegar a vários mínimos diferentes, permitindo-se até obter um mínimo global, uma ideia que, apesar do artigo não mencionar, remonta a outra mais antiga, Otimização por Recozimento Simulado (Simulated Annealing Optimization)[anneling].
 
+Ajuste fino
+unfreeze
 
-
+Resumindo
+pseudo-código
 
 
 
@@ -131,3 +134,10 @@ NETWORK: PAPERSPACE
 
 A Survey on Transfer Learning
 Sinno Jialin Pan and Qiang Yang Fellow, IEEE
+
+
+
+
+
+----------
+
