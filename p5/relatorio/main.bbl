@@ -21,6 +21,20 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{caltech101}
+F.-F. Li, R.~Fergus, and P.~Perona, ``Learning generative visual models from
+  few training examples: An incremental bayesian approach tested on 101 object
+  categories.'' \emph{Computer Vision and Image Understanding}, vol. 106,
+  no.~1, pp. 59--70, 2007.
+
+\bibitem{goodfellow}
+\BIBentryALTinterwordspacing
+I.~J. Goodfellow, Y.~Bengio, and A.~C. Courville, \emph{Deep Learning}, ser.
+  Adaptive computation and machine learning.\hskip 1em plus 0.5em minus
+  0.4em\relax {MIT} Press, 2016. [Online]. Available:
+  \url{http://www.deeplearningbook.org/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{alexnet}
 \BIBentryALTinterwordspacing
 A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton, ``Imagenet classification with
@@ -31,22 +45,15 @@ A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton, ``Imagenet classification with
   \url{http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf}
 \BIBentrySTDinterwordspacing
 
-\bibitem{caltech101}
-F.-F. Li, R.~Fergus, and P.~Perona, ``Learning generative visual models from
-  few training examples: An incremental bayesian approach tested on 101 object
-  categories.'' \emph{Computer Vision and Image Understanding}, vol. 106,
-  no.~1, pp. 59--70, 2007.
-
 \bibitem{hinton}
-Y.~LeCun, Y.~Bengio, and G.~Hinton, ``Deep learning,'' vol. 521, pp. 436--44,
-  05 2015.
+Y.~LeCun, Y.~Bengio, and G.~Hinton, ``Deep learning,'' \emph{Nature}, vol. 521,
+  pp. 436--44, 05 2015.
 
-\bibitem{goodfellow}
+\bibitem{zeiler}
 \BIBentryALTinterwordspacing
-I.~J. Goodfellow, Y.~Bengio, and A.~C. Courville, \emph{Deep Learning}, ser.
-  Adaptive computation and machine learning.\hskip 1em plus 0.5em minus
-  0.4em\relax {MIT} Press, 2016. [Online]. Available:
-  \url{http://www.deeplearningbook.org/}
+M.~D. Zeiler and R.~Fergus, ``Visualizing and understanding convolutional
+  networks,'' \emph{CoRR}, vol. abs/1311.2901, 2013. [Online]. Available:
+  \url{http://arxiv.org/abs/1311.2901}
 \BIBentrySTDinterwordspacing
 
 \bibitem{sinno}
@@ -84,8 +91,9 @@ S.~Kirkpatrick, C.~D. Gelatt, and M.~P. Vecchi, ``Optimization by simulated
   [Online]. Available: \url{http://www.jstor.org/stable/1690046}
 \BIBentrySTDinterwordspacing
 
-\bibitem{OpenCV}
-G.~Bradski, ``{The OpenCV Library},'' \emph{Dr. Dobb's Journal of Software
-  Tools}, 2000.
+\bibitem{he}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Spatial pyramid pooling in deep
+  convolutional networks for visual recognition,'' \emph{{IEEE} Trans. Pattern
+  Anal. Mach. Intell.}, vol.~37, no.~9, pp. 1904--1916, 2015.
 
 \end{thebibliography}

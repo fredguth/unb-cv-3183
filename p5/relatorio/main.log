@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  31 MAY 2018 11:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  31 MAY 2018 20:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -718,6 +718,26 @@ Package: multirow 2016/11/25 v2.2 Span multiple rows of a table
 \multirow@dima=\skip50
 \bigstrutjot=\dimen137
 )
+(/usr/local/texlive/2017/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2016/04/27 v1.618033 publication quality tables
+\heavyrulewidth=\dimen138
+\lightrulewidth=\dimen139
+\cmidrulewidth=\dimen140
+\belowrulesep=\dimen141
+\belowbottomsep=\dimen142
+\aboverulesep=\dimen143
+\abovetopsep=\dimen144
+\cmidrulesep=\dimen145
+\cmidrulekern=\dimen146
+\defaultaddspace=\dimen147
+\@cmidla=\count112
+\@cmidlb=\count113
+\@aboverulesep=\dimen148
+\@belowrulesep=\dimen149
+\@thisruleclass=\count114
+\@lastruleclass=\count115
+\@thisrulewidth=\dimen150
+)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/subfig/subfig.sty
 Package: subfig 2005/06/28 ver: 1.3 subfig package
 
@@ -727,13 +747,13 @@ Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 67.
-\captionmargin=\dimen138
-\captionmargin@=\dimen139
-\captionwidth=\dimen140
-\caption@tempdima=\dimen141
-\caption@indent=\dimen142
-\caption@parindent=\dimen143
-\caption@hangindent=\dimen144
+\captionmargin=\dimen151
+\captionmargin@=\dimen152
+\captionwidth=\dimen153
+\caption@tempdima=\dimen154
+\caption@indent=\dimen155
+\caption@parindent=\dimen156
+\caption@hangindent=\dimen157
 Package caption Info: Unknown document class (or package),
 (caption)             standard defaults will be used.
 )
@@ -753,22 +773,53 @@ ormalfont \footnotesize \noindent \unhbox \@tempboxa #2}\else \ifCLASSOPTIONcon
 ference \hbox to\hsize {\normalfont \footnotesize \hfil \box \@tempboxa \hfil }
 \else \hbox to\hsize {\normalfont \footnotesize \box \@tempboxa \hfil }\fi \fi 
 \fi .
-\c@ContinuedFloat=\count112
+\c@ContinuedFloat=\count116
 )
-\c@KVtest=\count113
+\c@KVtest=\count117
 \sf@farskip=\skip51
-\sf@captopadj=\dimen145
+\sf@captopadj=\dimen158
 \sf@capskip=\skip52
 \sf@nearskip=\skip53
-\c@subfigure=\count114
-\c@subfigure@save=\count115
-\c@lofdepth=\count116
-\c@subtable=\count117
-\c@subtable@save=\count118
-\c@lotdepth=\count119
+\c@subfigure=\count118
+\c@subfigure@save=\count119
+\c@lofdepth=\count120
+\c@subtable=\count121
+\c@subtable@save=\count122
+\c@lotdepth=\count123
 \sf@top=\skip54
 \sf@bottom=\skip55
-) (/usr/local/texlive/2017/texmf-dist/tex/generic/babel/babel.sty
+) (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/refcount.sty
+Package: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
+)
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+))))
+\c@section@level=\count124
+LaTeX Info: Redefining \ref on input line 355.
+LaTeX Info: Redefining \pageref on input line 355.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2017/05/19 3.10 The Babel package
 
 (/usr/local/texlive/2017/texmf-dist/tex/generic/babel-english/english.ldf
@@ -776,8 +827,8 @@ Language: english 2017/01/24 v3.3q English support from the babel system
 
 (/usr/local/texlive/2017/texmf-dist/tex/generic/babel/babel.def
 File: babel.def 2017/05/19 3.10 Babel common definitions
-\babel@savecnt=\count120
-\U@D=\dimen146
+\babel@savecnt=\count125
+\U@D=\dimen159
 )
 \l@canadian = a dialect from \language\l@american 
 \l@australian = a dialect from \language\l@british 
@@ -797,47 +848,43 @@ Language: portuges 2008/03/18 v1.2q Portuguese support from the babel system
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 19.
  (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    ... okay on input line 19.
 
 -- Lines per column: 56 (exact).
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count121
-\scratchdimen=\dimen147
+\scratchcounter=\count126
+\scratchdimen=\dimen160
 \scratchbox=\box30
-\nofMPsegments=\count122
-\nofMParguments=\count123
+\nofMPsegments=\count127
+\nofMParguments=\count128
 \everyMPshowfont=\toks23
-\MPscratchCnt=\count124
-\MPscratchDim=\dimen148
-\MPnumerator=\count125
-\makeMPintoPDFobject=\count126
+\MPscratchCnt=\count129
+\MPscratchDim=\dimen161
+\MPnumerator=\count130
+\makeMPintoPDFobject=\count131
 \everyMPtoPDFconversion=\toks24
 ) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifluatex.sty
-Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
-Package ifluatex Info: LuaTeX not detected.
-)
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/ifpdf.sty
 Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
 )
@@ -855,19 +902,6 @@ Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
 Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
 ))
-(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
-
-(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
-Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
-
-(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/etexcmds.sty
-Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
-Package etexcmds Info: Could not find \expanded.
-(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
-(etexcmds)             that some package has redefined \expanded.
-(etexcmds)             In the latter case, load this package earlier.
-)))
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 38.
 Package grfext Info: Graphics extension search list:
@@ -883,81 +917,72 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: End \AtBeginDocument code.
 
-<RCP.png, id=1, 1386.17876pt x 473.77pt>
-File: RCP.png Graphic file (type png)
- <use RCP.png>
-Package pdftex.def Info: RCP.png used on input line 64.
-(pdftex.def)             Requested size: 239.39923pt x 81.81938pt.
+<layers.png, id=1, 682.80093pt x 261.22594pt>
+File: layers.png Graphic file (type png)
+ <use layers.png>
+Package pdftex.def Info: layers.png used on input line 67.
+(pdftex.def)             Requested size: 252.0pt x 96.40892pt.
  [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
- <./RCP.png>]
-<MLvsDL.png, id=11, 1150.2975pt x 921.4425pt>
-File: MLvsDL.png Graphic file (type png)
- <use MLvsDL.png>
-Package pdftex.def Info: MLvsDL.png used on input line 86.
-(pdftex.def)             Requested size: 189.0pt x 151.39874pt.
-LaTeX Font Info:    Try loading font information for U+msa on input line 101.
+ <./layers.png>]
+LaTeX Font Info:    Try loading font information for U+msa on input line 103.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 101.
+LaTeX Font Info:    Try loading font information for U+msb on input line 103.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [2 <./MLvsDL.png>] <lr_1.png, id=18, 390.45876pt x 271.0125pt>
+)
+<resnet-50-2.png, id=13, 529.98pt x 237.88875pt>
+File: resnet-50-2.png Graphic file (type png)
+ <use resnet-50-2.png>
+Package pdftex.def Info: resnet-50-2.png used on input line 154.
+(pdftex.def)             Requested size: 189.0pt x 84.83405pt.
+ [2 <./resnet-50-2.png>] <lr_1.png, id=19, 390.45876pt x 271.0125pt>
 File: lr_1.png Graphic file (type png)
  <use lr_1.png>
-Package pdftex.def Info: lr_1.png used on input line 182.
+Package pdftex.def Info: lr_1.png used on input line 186.
 (pdftex.def)             Requested size: 119.50148pt x 82.94196pt.
 
-<lr_2.png, id=19, 390.45876pt x 271.0125pt>
+<lr_2.png, id=20, 390.45876pt x 271.0125pt>
 File: lr_2.png Graphic file (type png)
  <use lr_2.png>
-Package pdftex.def Info: lr_2.png used on input line 183.
+Package pdftex.def Info: lr_2.png used on input line 187.
 (pdftex.def)             Requested size: 119.50148pt x 82.94196pt.
 
-
-Package caption Warning: \label without proper reference on input line 180.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `lr_find' on page 3 undefined on input line 188.
-
-
-Package caption Warning: \label without proper reference on input line 180.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `lr_find' on page 3 undefined on input line 190.
-
-
-Package caption Warning: \label without proper reference on input line 194.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `cicle' on page 3 undefined on input line 190.
-
-<cyclical_graph.png, id=20, 403.5075pt x 266.9975pt>
+<cyclical_graph.png, id=21, 403.5075pt x 266.9975pt>
 File: cyclical_graph.png Graphic file (type png)
  <use cyclical_graph.png>
-Package pdftex.def Info: cyclical_graph.png used on input line 196.
-(pdftex.def)             Requested size: 189.0pt x 125.06105pt.
+Package pdftex.def Info: cyclical_graph.png used on input line 194.
+(pdftex.def)             Requested size: 138.60077pt x 91.71089pt.
 
-<2040x2040.png, id=21, 379.4175pt x 252.945pt>
-File: 2040x2040.png Graphic file (type png)
- <use 2040x2040.png>
-Package pdftex.def Info: 2040x2040.png used on input line 212.
-(pdftex.def)             Requested size: 239.39923pt x 159.60321pt.
+<minimos.png, id=22, 2007.5pt x 837.1275pt>
+File: minimos.png Graphic file (type png)
+ <use minimos.png>
+Package pdftex.def Info: minimos.png used on input line 202.
+(pdftex.def)             Requested size: 252.0pt x 105.07498pt.
 
+Underfull \hbox (badness 3098) in paragraph at lines 203--203
+[]\OT1/ptm/m/n/10 Figura 5: |Varia[][]ao c[]^^Pclica per-mite en-con-trar di-fe
+-ren-tes
+ []
+
+
+LaTeX Warning: Reference `cycle' on page 3 undefined on input line 214.
+
+[3 <./lr_1.png> <./lr_2.png> <./cyclical_graph.png> <./minimos.png (PNG copy)>]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 219.
+               Default added (so using `tbp') on input line 232.
 
-[3 <./lr_1.png> <./lr_2.png> <./cyclical_graph.png> <./2040x2040.png>]
+
+LaTeX Warning: Reference `opt' on page 4 undefined on input line 255.
+
 (./main.bbl
-Underfull \hbox (badness 10000) in paragraph at lines 26--33
+Underfull \hbox (badness 10000) in paragraph at lines 40--47
 \OT1/ptm/m/n/8 4824-[]imagenet-[]classi^^Lcation-[]with-[]deep-[]convolutional-
 []neural-[]networks .
  []
@@ -980,25 +1005,26 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 6215 strings out of 492995
- 93140 string characters out of 6132704
- 174640 words of memory out of 5000000
- 9644 multiletter control sequences out of 15000+600000
+ 6458 strings out of 492995
+ 96910 string characters out of 6132704
+ 177419 words of memory out of 5000000
+ 9873 multiletter control sequences out of 15000+600000
  40049 words of font info for 84 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,11n,42p,712b,311s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,12n,42p,690b,323s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/tex
-mf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/f
-onts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1
-/urw/times/utmri8a.pfb>
-Output written on main.pdf (4 pages, 784587 bytes).
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
+e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/
+2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/20
+17/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-d
+ist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts
+/type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw
+/times/utmri8a.pfb>
+Output written on main.pdf (4 pages, 1658379 bytes).
 PDF statistics:
- 58 PDF objects out of 1000 (max. 8388607)
- 33 compressed objects within 1 object stream
+ 62 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
