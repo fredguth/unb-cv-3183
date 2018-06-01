@@ -31,7 +31,7 @@ fredguth@fredguth.com}
 \maketitle
 
 \begin{abstract}
-Reconhecimento de Objetos lida com a identificação de objetos em imagens. Técnicas baseadas em \textit{deep learning} têm sido as mais bem sucedidas para este problema. Neste projeto, classificamos objetos da base Caltech 101\cite{caltech101} usando uma rede ResNet-50 pré-treinada e aplicamos diversas técnicas (validação cruzada, aumento de dados, otimização de taxa de aprendizado, otimizações em tempo de teste) para melhorar os resultados. Usando apenas 5 imagens de treinamento por classe, obtivemos acurácia xx, um resultado apenas xx menor que o recorde para essa base, que usa 30 imagens de treinamento. 
+Reconhecimento de Objetos lida com a identificação de objetos em imagens. Técnicas baseadas em \textit{deep learning} têm sido as mais bem sucedidas para este problema. Neste projeto, classificamos objetos da base Caltech 101\cite{caltech101} usando uma rede ResNet-50 pré-treinada e aplicamos diversas técnicas (validação cruzada, aumento de dados, otimização de taxa de aprendizado, otimizações em tempo de teste) para melhorar os resultados. Usando apenas 5 imagens de treinamento por classe, obtivemos acurácia de 85,13\%, um resultado apenas 9\% menor que o recorde para essa base, que usa 30 imagens de treinamento. 
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -70,7 +70,7 @@ A ideia é resolver o problema da representação do conhecimento introduzindo r
 \end{center}
 \end{figure}
 
-Em tarefas de classificação, as camadas amplificam características da entrada que são importantes para discriminação das amostras e suprimem variações irrelevantes. Uma imagem, entra como um tensor de valores de pixel,  a primeira camada tipicamente representam a presença ou ausência de bordas em determinadas orientações e localizações na imagem. A segunda, detecta padões simples e arranjos de bordas (vide \ref{layers}). A terceira pode compor os padrões simples em combinações maiores que correspondem com partes de objetos, as camadas subsequentes irão detectar objetos como combinações dessas partes\cite{hinton}.
+Em tarefas de classificação, as camadas amplificam características da entrada que são importantes para discriminação das amostras e suprimem variações irrelevantes. Uma imagem, entra como um tensor de valores de pixel,  a primeira camada tipicamente representam a presença ou ausência de bordas em determinadas orientações e localizações na imagem. A segunda, detecta padões simples e arranjos de bordas (vide Figura \ref{layers}). A terceira pode compor os padrões simples em combinações maiores que correspondem com partes de objetos, as camadas subsequentes irão detectar objetos como combinações dessas partes\cite{hinton}.
 
 
 \subsection{Transferência de Conhecimento}
@@ -78,7 +78,7 @@ Em nosso dia a dia, transferimos conhecimento a todo momento. Aprender a tocar p
 
 Pesquisa em transferêcia de conhecimento tem atraído mais e mais atenção desde 1995, quando foi tema de  um workshop na NIPS-95 que discutiu a necessidade de métodos de aprendizado de máquina que retém e reusam conhecimento previamente obtido\cite{sinno}. 
 
-No contexto de RCPs para reconhecimento visual de objetos, fica claro que as camadas iniciais: capazes de reconhecer bordas, padrões e partes de objetos, treinadas com um conjunto de imagens para reconhecer determinados rótulos\ref{layers}, podem ser usadas em outro conjunto de imagens totalmente diferente ainda que os rótulos também sejam diferentes. A capacidade de utilizar os pesos resultantes de treinamentos com milhões de imagens representa uma grande economia de processamento e uma ferramenta muito útil. 
+No contexto de RCPs para reconhecimento visual de objetos, fica claro que as camadas iniciais: capazes de reconhecer bordas, padrões e partes de objetos, treinadas com um conjunto de imagens para reconhecer determinados rótulos (Figura \ref{layers}), podem ser usadas em outro conjunto de imagens totalmente diferente ainda que os rótulos também sejam diferentes. A capacidade de utilizar os pesos resultantes de treinamentos com milhões de imagens representa uma grande economia de processamento e uma ferramenta muito útil. 
 
 
 \subsection{Hiperparâmetros}
@@ -90,9 +90,9 @@ O aspecto fundamental do \textit{deep learning} é que as camadas de caracterís
 % \end{center}
 % \end{figure}
 
-Para isso, entretanto, é preciso ajustar a rede para o problema em questão. Esse ajuste é obtido variando hiperparâmetros: learning rate, número de épocas, tamanho do \textit{batch}, função de ativação, inicialização, \textit{dropout}, etc. De certa forma, pode-se pensar que até a arquitetura utilizada (ResNet, Inception, LeNet, etc) é um parâmetro.  
+Para isso, entretanto, é preciso ajustar a rede para o problema em questão. Esse ajuste é obtido variando hiperparâmetros: \textit{learning rate}, número de épocas, tamanho do \textit{batch}, função de ativação, inicialização, \textit{dropout}, etc. De certa forma, pode-se pensar que até a arquitetura utilizada (ResNet, Inception, LeNet, etc) é um parâmetro.  
 
-É interessante notar que \textit{deep learning} é epistemologicamente muito mais próximo das ciências naturais do que do resto da Ciência da Computação.  Em deep learning o resultado empírico é crucial, o ajuste de hiperparâmetros pode ter tanto ou mais valor do que o desenvolvimento de novas arquiteturas e a criatividade em pensar formas de visualizar o resultados pode levar a novos insights. Sendo Ciência da Computação acostumada a presar o método dedutivo antes de tudo, tais características geram desconfiança e estranheza.  Por outro lado, abre-se caminho para novas pessoas, com outras formas de pensar.
+É interessante notar que \textit{deep learning} é epistemologicamente muito mais próximo das ciências naturais do que do resto da Ciência da Computação.  Em \textit{deep learning} o resultado empírico é crucial, o ajuste de hiperparâmetros pode ter tanto ou mais valor do que o desenvolvimento de novas arquiteturas e a criatividade em pensar formas de visualizar o resultados pode levar a novos insights. Sendo Ciência da Computação acostumada a presar o método dedutivo antes de tudo, tais características geram estranheza.  Por outro lado, abre-se caminho para novas pessoas, com outras formas de pensar.
 
 \subsection{A Base Caltech-101}
 Caltech 101 foi compilada em 2003 no California Institute of Technology\cite{caltech101}, com o propósito de ser utilizada para problemas de reconhecimento de objetos em imagens. A base contém 9146 imagens, divididas em 102 categorias, 101 de objetos e uma de background. 
@@ -107,9 +107,9 @@ Já é uma base antiga e algumas características a tornavam boas para aquele mo
 
 mas hoje são vistas como fraquezas da mesma, uma vez que na prática, imagens como a da Caltech-101 são "limpas demais" e de pouco utilidade em problemas reais.
 
-Além disso, a base conta com um número bastante limitado de categorias e imagens, algumas categorias contendo apenas 31 imagens. Não sendo possível treinar com mais do que 30 imagens.
+Além disso, a base conta com um número bastante limitado de categorias e imagens, algumas categorias contendo apenas 31 imagens. Não sendo possível, portanto,  treinar com mais do que 30 imagens.
 
-Neste projeto usamos uma seleção de apenas 5 imagens de treino por categoria (510 imagens) e 2040 imagens de teste. Para validação, separamos imagens da base de treino.
+Neste projeto usamos uma seleção de apenas 5 imagens de treino por categoria (510 no total) e 2040 imagens de teste. Para validação, separamos imagens da base de treino.
 
 \section{Método}\label{metodologia}
 
@@ -162,7 +162,7 @@ Automaticamente, a biblioteca remove a camada final da Resnet-50 e adapta para o
 
  
 \subsection{Validação Cruzada}
-Validação Cruzada (\textit{Cross Validation}) é uma técnica para criar uma base de validação a partir da base de treinamento. Em uma validação cruzada k-fold, a amostra original é aleatoriamente particionada em subamostra em k partes de igual tamanho, mutualmente exclusivas.  Depois do particionamento, uma das subamostras é utilizada para teste e as demais k-1 para treinamento. Ao final de k interações temos 5 modelos treinados em bases diferentes.
+Validação Cruzada (\textit{Cross Validation}) é uma técnica para criar uma base de validação a partir da base de treinamento. Em uma validação cruzada k-fold, a amostra original é aleatoriamente particionada em subamostra em \(k\) partes de igual tamanho, mutualmente exclusivas.  Depois do particionamento, uma das subamostras é utilizada para teste e as demais \(k-1\) para treinamento. Ao final de \(k\) interações temos 5 modelos treinados em bases diferentes.
 % \begin{figure}[ht!]
 % \begin{center}
 % \includegraphics[width=.45\columnwidth]{k-fold.png}
@@ -193,7 +193,7 @@ Para nos guiar na decisão da taxa mais adequada para o nosso problema, usamos a
 \begin{center}
 \includegraphics[width=.55\columnwidth]{cyclical_graph.png}
 \caption{Variação cíclica da taxa de aprendizado}
-\label{cicle}
+\label{cycle}
 \end{center}
 \end{figure}
 
@@ -207,7 +207,7 @@ Para nos guiar na decisão da taxa mais adequada para o nosso problema, usamos a
 
 Na figura \ref{lr_find} vemos que de início a função de perda melhora muito lentamente, e depois começa a acelerar a partir de 0.001, até que por volta de 0.1 a taxa de aprendizado se torna grande demais e o treinamento diverge, ou seja, a perda começa a aumentar. 
 
-A ideia é selecionar o ponto no gráfico com a perda mais rápida. No nosso exemplo, a perda diminui rapidamente na proximidade da taxa de aprendizado 0.012 , que é a que decidimos usar. Selecionar uma boa taxa inicial para o treinamento é apenas o começo, a ideia mais interessante da técnica é como se altera a taxa de treinamento durante o treinamento.  O mais comum é definir uma taxa de decaimento, mas fugindo ao senso comum,\cite{cyclical} sugere uma variação cíclica em que a taxa de aprendizado pode sofrer aumentos repentinos. A figura \ref{cicle} mostra um gráfico com a função de variação da taxa de decaimento que usamos em nossos treinamentos.
+A ideia é selecionar o ponto no gráfico com a perda mais rápida. No nosso exemplo, a perda diminui rapidamente na proximidade da taxa de aprendizado 0.012, que é a que decidimos usar. Selecionar uma boa taxa inicial para o treinamento é apenas o começo, a ideia mais interessante da técnica é como se altera a taxa de treinamento durante o treinamento.  O mais comum é definir uma taxa de decaimento, mas fugindo ao senso comum,\cite{cyclical} sugere uma variação cíclica em que a taxa de aprendizado pode sofrer aumentos repentinos. A figura \ref{cycle} mostra um gráfico com a função de variação da taxa de decaimento que usamos em nossos treinamentos.
 
 A justificativa é facilmente entendida na figura \ref{minimos} do próprio artigo.  A maneira convencional nos ajuda a chegar em um mínimo da função de perda que pode ser local. Já usando uma variação cíclica, podemos chegar a vários mínimos diferentes, permitindo-se até obter um mínimo global, uma ideia que, apesar do artigo não mencionar, remonta a outra mais antiga, Otimização por Recozimento Simulado (Simulated Annealing Optimization)\cite{annealing}.
 
@@ -218,7 +218,7 @@ No projeto, rodamos as duas opções, com a taxa fixa em 0.012 por 30 épocas (s
 
 Em tempo de teste fizemos duas otimizações que se mostraram interessantes:
 \begin{enumerate}
-\item Test Time Augmentation: Em tempo de teste, para cada imagem do conjunto de dados de teste, aplicamos transformações de Data Augmentation e para definir a classe do objeto, aplicamos a média de todas as imagens desse conjunto "aumentado".  Utilizamos 12 imagens, 1 do teste e 11 transformadas deste.
+\item Test Time Augmentation: Em tempo de teste, para cada imagem do conjunto de dados de teste, aplicamos transformações de Data Augmentation e para definir a classe do objeto, calculamos a média de todas as predições desse conjunto "aumentado".  Para cada imagem de teste, geramos 4 imagens derivadas.
 \item Test Time Model Average: Ao usar o k-fold para treinar os dados, em cada rodada temos 5 modelos treinados com 5 predições. Para cada imagem avaliada, tiramos a média das 5 predições.
 \end{enumerate}
 
@@ -226,7 +226,7 @@ Em tempo de teste fizemos duas otimizações que se mostraram interessantes:
 \section{Resultados}
 Nesta seção apresentamos os resultados obtidos. Todos os dados podem ser acessados no repositório do projeto (\ref{repo}).
 
-Quantitativamente, os resultados foram interessantes, como se pode ver em \ref{tabela}.
+Quantitativamente, os resultados foram interessantes, como se pode ver na Tabela \ref{tabela}.
 % Please add the following required packages to your document preamble:
 % \usepackage{booktabs}
 \begin{table}[]
@@ -238,7 +238,7 @@ Quantitativamente, os resultados foram interessantes, como se pode ver em \ref{t
             & \multicolumn{1}{c}{Single Rate} & \multicolumn{1}{c}{Cyclical Rate} \\ \midrule
 Treinamento (s) & \(693.40\pm6.39\)& \(737.24\pm2.52\)                                  \\ \midrule
 Predição (s)    & \(427.70\pm5.08\)&  \(435.08\pm0.88\)                                \\ \midrule
-Acurácia  (\%)  & \(84.26\pm0.98\)  & \strong{\(85.13\pm0.74\)}                              \\ \bottomrule
+Acurácia  (\%)  & \(84.26\pm0.98\)  & \(85.13\pm0.74\)                              \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -246,12 +246,12 @@ Acurácia  (\%)  & \(84.26\pm0.98\)  & \strong{\(85.13\pm0.74\)}                
 Em face aos resultados obtidos, cabem algumas análises:
 \begin{enumerate}
     \item A versão cíclica foi apenas 1\% melhor que a versão com taxa fixa e 6\% mais lenta. Esse resultado não nos permite dizer que comprovamos experimentalmente a superioridade da versão cíclica como descrito em \cite{annealing, fastai}. Um possível motivo pode ser o pequeno número de imagens de treinamento.
-    \item Nosso melhor resultado, 85,12\% de acurácia, é está a 8.9\% do recorde (93.42\%\cite{he}), entretanto, essa não é uma comparação justa, uma vez que o recorde foi obtido treinando-se com 30 imagens.
+    \item Nosso melhor resultado, 85,13\% de acurácia, está a 8.9\% do recorde (93.42\%\cite{he}), entretanto, essa não é uma comparação justa, uma vez que o recorde foi obtido treinando-se com 30 imagens.
 \end{enumerate}
 
 
 \section{Discussão e Conclusões}
-Neste trabalho, implementamos um algoritmos para reconhecimento de objetos para base Caltech 101. Utilizamos a arquitetura ResNet-50 pré-treinada com imagens da ImageNet e aplicamos otimizações de hiperparâmetros\ref{opt}. A acurácia obtida com 5 imagens de treinamento foi 85,12\%, 9\% do estado da arte, que usa 30 imagens de treinamento. Acreditamos que esse resultado pode ser ainda melhorado explorando outras arquiteturas e 30 imagens por classe para treinamento. 
+Neste trabalho, implementamos um algoritmos para reconhecimento de objetos para base Caltech 101. Utilizamos a arquitetura ResNet-50 pré-treinada com imagens da ImageNet e aplicamos otimizações de hiperparâmetros. A acurácia obtida com 5 imagens de treinamento foi 85,13\%. Acreditamos que esse resultado pode ser ainda melhorado explorando outras arquiteturas e 30 imagens por classe para treinamento. 
 
 % \begin{figure}[htbp]
 % \centerline{\includegraphics{fig.jpg}}
