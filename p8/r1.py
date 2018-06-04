@@ -16,14 +16,14 @@ while(keepGoing):
     for i in range(945):
         fname = "{}.jpg".format(str(i+1).zfill(5))
         frame = cv2.imread('./pd8-files/car1/{}'.format(fname), cv2.IMREAD_UNCHANGED)
-        # ###############################
+        # # ###############################
 
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        if (previous != []):
-            frame = cv2.absdiff(frame, previous)
-        previous = frame
-        frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
-        ######################################
+        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # if (previous != []):
+        #     frame = cv2.absdiff(frame, previous)
+        # previous = frame
+        # frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+        # ######################################
         try:
             bb = content[i].strip().split(',')
             pt1 = (int(float(bb[0])), int(float(bb[1]))) 
@@ -35,11 +35,15 @@ while(keepGoing):
             pass
         cv2.imshow('video', frame)
         
-        k = cv2.waitKey(33)
-        if k==27:
-            cv2.destroyAllWindows
-            keepGoing = False
-            break
+        while (keepGoing):
+            k = cv2.waitKey(33) &0xff
+            
+            if k==27:
+                cv2.destroyAllWindows
+                keepGoing = False
+                break
+            if k==32: #spae
+                break
     
 
      
