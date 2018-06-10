@@ -114,12 +114,11 @@ while(keepGoing):
                 tracker = cv2.TrackerKCF_create()
                 ok = tracker.init(frame, bbox)
 
-                # pt1 = (int(bbox[0]), int(bbox[1]))
-                # pt2 = (int(bbox[0] + bbox[2]), int(bbox[1]+bbox[3]))
-                # frame = cv2.rectangle(frame, pt1, pt2, (0, 0, 0), 3)
-                # frame = cv2.rectangle(frame, pt1, pt2, (0, 255, 255), 2)
+                pt1 = (int(bbox[0]), int(bbox[1]))
+                pt2 = (int(bbox[0] + bbox[2]), int(bbox[1]+bbox[3]))
+                frame = cv2.rectangle(frame, pt1, pt2, (0, 255, 255), 2)
                 
-        cv2.putText(frame, "frame:{}, acc: {}".format(i,mAcc), (10, 20),
+        cv2.putText(frame, "frm:{}, acc: {:.2f}".format(i,mAcc*100), (10, 20),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
         cv2.imshow('video', frame)
         
@@ -131,8 +130,20 @@ while(keepGoing):
                 keepGoing = False
                 break
             if k == 32:  # spae
+                if (i==944):
+                    keepGoing = False
                 break
+   
+while (True):
+    cv2.imshow('video', frame)
+    k = cv2.waitKey(33) & 0xff
+
+    if k == 27:
+        cv2.destroyAllWindows
+        
+        break
     
+
 
      
 
