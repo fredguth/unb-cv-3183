@@ -54,11 +54,12 @@ def getIoU(b1, b2):
 
     # return the intersection over union value
     return iou
-    
+
+print ('\n\nUSE <SPACE> TO FORWARD')
 while(keepGoing):
-    # for i in range (9928):
     f = 0
     mAcc = 0
+    rbs = 1
     counter =1
     for i in range(945):
         
@@ -85,6 +86,9 @@ while(keepGoing):
             if not math.isnan(b1[0][0]):
                 acc = getIoU(b1, b2)
                 mAcc = (mAcc*(counter-1)+acc)/counter
+                rbs = math.exp(-30 * f/counter)
+                print ('\nfalhas:', f)
+                print ('frames válidos:', counter)
                 counter = counter + 1
             
         else:
@@ -107,6 +111,8 @@ while(keepGoing):
                 bx, by, a, b = (int(float(bb[0])), int(float(bb[1])),
                                 int(float(bb[2])), int(float(bb[3])))
                 mAcc = (mAcc*(counter-1))/counter
+                f = f+1
+                rbs = math.exp(-30* f/counter)
                 counter = counter + 1
                 bbox = (int(float(bb[0])), int(float(bb[1])),
                         int(float(bb[2])), int(float(bb[3])))
@@ -118,8 +124,8 @@ while(keepGoing):
                 pt2 = (int(bbox[0] + bbox[2]), int(bbox[1]+bbox[3]))
                 frame = cv2.rectangle(frame, pt1, pt2, (0, 255, 255), 2)
                 
-        cv2.putText(frame, "frm:{}, acc: {:.2f}".format(i,mAcc*100), (10, 20),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
+        cv2.putText(frame, "f:{}, acc: {:.2f}, rbs: {:.2f}".format(i, mAcc*100, rbs*100), (10, 20),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1)
         cv2.imshow('video', frame)
         
         while (keepGoing):
