@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  13 JUN 2018 22:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  13 JUN 2018 22:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main.tex
+**main
 (./main.tex
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
@@ -849,9 +849,6 @@ Language: portuges 2008/03/18 v1.2q Portuguese support from the babel system
 
 LaTeX Warning: Label `repo' multiply defined.
 
-
-LaTeX Warning: Label `figure' multiply defined.
-
 )
 \openout1 = `main.aux'.
 
@@ -924,103 +921,79 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: End \AtBeginDocument code.
 
-
-LaTeX Warning: Reference `kcf-table' on page 1 undefined on input line 58.
-
 <tabela-henriques.png, id=1, 466.74374pt x 128.48pt>
 File: tabela-henriques.png Graphic file (type png)
 
 <use tabela-henriques.png>
-Package pdftex.def Info: tabela-henriques.png used on input line 65.
+Package pdftex.def Info: tabela-henriques.png used on input line 57.
 (pdftex.def)             Requested size: 252.0pt x 69.36835pt.
  <kalman.png, id=2, 872.25874pt x 472.76625pt>
 File: kalman.png Graphic file (type png)
 
 <use kalman.png>
-Package pdftex.def Info: kalman.png used on input line 78.
+Package pdftex.def Info: kalman.png used on input line 74.
 (pdftex.def)             Requested size: 252.0pt x 136.5793pt.
  [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
  <./tabela-henriques.png>]
+LaTeX Font Info:    Try loading font information for U+msa on input line 92.
 
-LaTeX Warning: Reference `etapas-kalman' on page 2 undefined on input line 87.
-
-LaTeX Font Info:    Try loading font information for U+msa on input line 95.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 95.
+LaTeX Font Info:    Try loading font information for U+msb on input line 92.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 1668) in paragraph at lines 112--114
+Underfull \hbox (badness 1668) in paragraph at lines 109--111
 []\OT1/ptm/m/n/10 O ras-tre-a-dor KCF foi de-sen-vol-vido (r3.py) usando a
  []
 
 
-Underfull \hbox (badness 3525) in paragraph at lines 114--115
+Underfull \hbox (badness 3525) in paragraph at lines 111--112
 []\OT1/ptm/m/n/10 executamos o pro-grama r3.py com 2 v[]^^Pdeos de
  []
 
 
-Underfull \hbox (badness 3364) in paragraph at lines 123--125
+Underfull \hbox (badness 3364) in paragraph at lines 120--122
 []\OT1/ptm/m/n/10 Por []ultimo, []e im-por-tante men-ci-o-nar tamb[]em que a
  []
 
 
-Underfull \hbox (badness 3525) in paragraph at lines 125--126
+Underfull \hbox (badness 3525) in paragraph at lines 122--123
 []\OT1/ptm/m/n/10 executamos o pro-grama r4.py com 2 v[]^^Pdeos de
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 163.
+               Default added (so using `tbp') on input line 160.
 
-[2 <./kalman.png>] <car1basic.png, id=24, 373.395pt x 249.93375pt>
+<car1basic.png, id=12, 373.395pt x 249.93375pt>
 File: car1basic.png Graphic file (type png)
-
-<use car1basic.png>
-Package pdftex.def Info: car1basic.png used on input line 181.
+ <use car1basic.png>
+Package pdftex.def Info: car1basic.png used on input line 177.
 (pdftex.def)             Requested size: 113.81102pt x 76.17819pt.
- <car2basic.png, id=26, 379.4175pt x 249.93375pt>
+
+<car2basic.png, id=14, 379.4175pt x 249.93375pt>
 File: car2basic.png Graphic file (type png)
-
-<use car2basic.png>
-Package pdftex.def Info: car2basic.png used on input line 182.
+ <use car2basic.png>
+Package pdftex.def Info: car2basic.png used on input line 178.
 (pdftex.def)             Requested size: 113.81102pt x 74.96925pt.
-
-
-Package caption Warning: \label without proper reference on input line 177.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `kcf' on page 3 undefined on input line 185.
-
-<car1kalman.png, id=27, 380.42125pt x 249.93375pt>
+ [2 <./kalman.png>] <car1kalman.png, id=27, 380.42125pt x 249.93375pt>
 File: car1kalman.png Graphic file (type png)
- <use car1kalman.png>
-Package pdftex.def Info: car1kalman.png used on input line 191.
+
+<use car1kalman.png>
+Package pdftex.def Info: car1kalman.png used on input line 187.
 (pdftex.def)             Requested size: 113.81102pt x 74.77095pt.
-
-<car2kalman.png, id=28, 379.4175pt x 249.93375pt>
+ <car2kalman.png, id=28, 379.4175pt x 249.93375pt>
 File: car2kalman.png Graphic file (type png)
- <use car2kalman.png>
-Package pdftex.def Info: car2kalman.png used on input line 192.
+
+<use car2kalman.png>
+Package pdftex.def Info: car2kalman.png used on input line 188.
 (pdftex.def)             Requested size: 113.81102pt x 74.96925pt.
-
-
-Package caption Warning: \label without proper reference on input line 187.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `kalman' on page 3 undefined on input line 196.
-
-
-LaTeX Warning: Reference `kcf-opencv' on page 3 undefined on input line 203.
-
-(./main.bbl)
+ (./main.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -1035,20 +1008,17 @@ Before submitting the final camera ready copy, remember to:
 [3 <./car1basic.png> <./car2basic.png> <./car1kalman.png> <./car2kalman.png>]
 (./main.aux)
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 6450 strings out of 492995
- 96909 string characters out of 6132704
- 176304 words of memory out of 5000000
- 9865 multiletter control sequences out of 15000+600000
- 40556 words of font info for 85 fonts, out of 8000000 for 9000
+ 6448 strings out of 492995
+ 96895 string characters out of 6132704
+ 178515 words of memory out of 5000000
+ 9864 multiletter control sequences out of 15000+600000
+ 39449 words of font info for 84 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,10n,49p,659b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,10n,49p,655b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
 xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
@@ -1065,7 +1035,7 @@ st/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-dist
 e1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/ti
 mes/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmri8
 a.pfb>
-Output written on main.pdf (3 pages, 485142 bytes).
+Output written on main.pdf (3 pages, 484727 bytes).
 PDF statistics:
  86 PDF objects out of 1000 (max. 8388607)
  55 compressed objects within 1 object stream

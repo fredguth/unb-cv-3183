@@ -54,9 +54,8 @@ O objetivo deste projeto é rastrear carros em vídeos de perseguição policial
 \subsection{Rastreador KCF}
 \begin{figure}[ht!]
 \begin{center}
-\label{kcf-table}
 \includegraphics[width=\columnwidth]{tabela-henriques.png}
-\caption{Principais diferenças entre técnicas de rastreamento por detecção tradicionais versus KCF. Velocidade para regiões de 64x64 pixels\cite{henriques2012}.}
+\caption{Principais diferenças entre técnicas de rastreamento por detecção tradicionais versus KCF. Velocidade para regiões de 64x64 pixels\cite{henriques2012}.}\label{kcf-table}
 \end{center}
 \end{figure}
 Um dos grandes avanços recentes na pesquisa em rastreamento visual foi a adoção de métodos de aprendizado que fazem "rastreamento por detecção". Dado uma amostra da imagem do alvo, o objetivo é que um modelo classificador aprenda a discriminar entre o alvo e o ambiente em uma fase de treinamento. A cada deteção, uma nova imagem do alvo pode ser usada para melhorar o modelo do classificador\cite{henriques, henriques2012}.
