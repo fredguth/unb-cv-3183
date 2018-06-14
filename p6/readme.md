@@ -29,3 +29,5 @@ Gerar relatório
 Relatório:
 * ./relatorio/main.pdf
 
+Arquivos de dados
+* Todos os arquivos .npy são utilizados por stats.py e stats.ipynb para gerar estatísticas para o relatório
