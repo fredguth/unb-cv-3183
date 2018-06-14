@@ -9,7 +9,7 @@ cv2.namedWindow("video")
 cv2.moveWindow("video", 40, 40)
 keepGoing = True
 content = None
-with open("./pd8-files/gtcar1.txt") as f:
+with open("./pd8-files/gtcar2.txt") as f:
     content = f.readlines()
 bb = content[0].strip().split(',')
 bx, by, a, b  =  (int(float(bb[0])), int(float(bb[1])), int(float(bb[2])), int(float(bb[3]))) 
@@ -19,7 +19,7 @@ bbox = (int(float(bb[0])), int(float(bb[1])),
 bbox = (bx, by, a - bx, b - by)
 
 
-frame = cv2.imread('./pd8-files/car1/00001.jpg', cv2.IMREAD_UNCHANGED)
+frame = cv2.imread('./pd8-files/car2/00001.jpg', cv2.IMREAD_UNCHANGED)
 template = frame[by:b, bx:a]
 
 
@@ -61,10 +61,11 @@ while(keepGoing):
     mAcc = 0
     rbs = 1
     counter =1
+    statistics=[]
     for i in range(945):
         
         fname = "{}.jpg".format(str(i+1).zfill(5))
-        frame = cv2.imread('./pd8-files/car1/{}'.format(fname), cv2.IMREAD_UNCHANGED)
+        frame = cv2.imread('./pd8-files/car2/{}'.format(fname), cv2.IMREAD_UNCHANGED)
         
         c = content[i]
         c = c.strip().split(',')
@@ -90,7 +91,9 @@ while(keepGoing):
                 print ('\nfalhas:', f)
                 print ('frames válidos:', counter)
                 counter = counter + 1
-            
+                statistics.append((mAcc, rbs))
+            else:
+                statistics.append((None, None))
         else:
             
             # h, w, c = frame.shape
@@ -113,6 +116,7 @@ while(keepGoing):
                 mAcc = (mAcc*(counter-1))/counter
                 f = f+1
                 rbs = math.exp(-30* f/counter)
+                statistics.append((mAcc, rbs))
                 counter = counter + 1
                 bbox = (int(float(bb[0])), int(float(bb[1])),
                         int(float(bb[2])), int(float(bb[3])))
@@ -123,7 +127,8 @@ while(keepGoing):
                 pt1 = (int(bbox[0]), int(bbox[1]))
                 pt2 = (int(bbox[0] + bbox[2]), int(bbox[1]+bbox[3]))
                 frame = cv2.rectangle(frame, pt1, pt2, (0, 255, 255), 2)
-                
+            else:
+                statistics.append((None, None))
         cv2.putText(frame, "f:{}, acc: {:.2f}, rbs: {:.2f}".format(i, mAcc*100, rbs*100), (10, 20),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1)
         cv2.imshow('video', frame)
@@ -138,6 +143,8 @@ while(keepGoing):
             if k == 32:  # spae
                 if (i==944):
                     keepGoing = False
+                    statistics = np.asarray(statistics)
+                    np.save("car2-stats", statistics)
                 break
    
 while (True):

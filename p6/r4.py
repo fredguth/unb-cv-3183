@@ -4,31 +4,6 @@ import cv2
 import time
 import math
 
-
-cv2.namedWindow("video")
-cv2.moveWindow("video", 40, 40)
-keepGoing = True
-content = None
-with open("./pd8-files/gtcar1.txt") as f:
-    content = f.readlines()
-bb = content[0].strip().split(',')
-bx, by, a, b  =  (int(float(bb[0])), int(float(bb[1])), int(float(bb[2])), int(float(bb[3]))) 
-
-bbox = (int(float(bb[0])), int(float(bb[1])),
-        int(float(bb[2])), int(float(bb[3])))
-bbox = (bx, by, a - bx, b - by)
-
-
-frame = cv2.imread('./pd8-files/car1/00001.jpg', cv2.IMREAD_UNCHANGED)
-template = frame[by:b, bx:a]
-
-
-tracker = cv2.TrackerKCF_create()
-ok = tracker.init(frame, bbox)
-
-# cv2.imshow("template", template)
-previous = bbox
-
 def getBoxSize(box):
     xA, yA, xB, yB = box
     return (xB-xA)*(yB-yA)
@@ -88,6 +63,33 @@ def getIoU(b1, b2):
     # return the intersection over union value
     return iou
 
+cv2.namedWindow("video")
+cv2.moveWindow("video", 40, 40)
+keepGoing = True
+content = None
+with open("./pd8-files/gtcar2.txt") as f:
+    content = f.readlines()
+bb = content[0].strip().split(',')
+bx, by, a, b  =  (int(float(bb[0])), int(float(bb[1])), int(float(bb[2])), int(float(bb[3]))) 
+
+bbox = (int(float(bb[0])), int(float(bb[1])),
+        int(float(bb[2])), int(float(bb[3])))
+bbox = (bx, by, a - bx, b - by)
+
+
+frame = cv2.imread('./pd8-files/car2/00001.jpg', cv2.IMREAD_UNCHANGED)
+template = frame[by:b, bx:a]
+
+initState = getCenter(((bx,by),(a,b)))
+initState = np.asarray(initState, dtype=np.float32)
+
+tracker = cv2.TrackerKCF_create()
+ok = tracker.init(frame, bbox)
+
+# cv2.imshow("template", template)
+previous = bbox
+
+
 print ('\n\nUSE <SPACE> TO FORWARD')
 kalman = cv2.KalmanFilter(4, 2)
 kalman.measurementMatrix = np.array([[1, 0, 0, 0],
@@ -111,10 +113,11 @@ while(keepGoing):
     mAcc = 0
     rbs = 1
     counter =1
-    for i in range(945):
+    stats = []
+    for i in range(9928):
         
         fname = "{}.jpg".format(str(i+1).zfill(5))
-        frame = cv2.imread('./pd8-files/car1/{}'.format(fname), cv2.IMREAD_UNCHANGED)
+        frame = cv2.imread('./pd8-files/car2/{}'.format(fname), cv2.IMREAD_UNCHANGED)
         
         c = content[i]
         c = c.strip().split(',')
@@ -134,70 +137,64 @@ while(keepGoing):
             b2 = (pt1,pt2)
             center = getCenter(b2)
             center = np.asarray(center, dtype=np.float32)
+            center = center - initState
             
             kalman.correct(center)
-            prediction = kalman.predict()
-            print (kalman.statePre)
-            p = np.asarray(centralize(b2, (prediction[0],prediction[1])))
-            p = np.int0(p)
-            
-            kpt1 = p[0],p[1]
-            kpt2 = p[2],p[3]
-            
-            # kpt1,kpt2 = centralize((pt1,pt2), prediction)
-
-            frame = cv2.rectangle(frame, kpt1, kpt2, (0, 0, 0), 3)
-            frame = cv2.rectangle(frame, kpt1, kpt2, (0, 255, 0), 2)
-
-            # print ('box size', getBoxSize((pt1[0], pt1[1], pt2[0],pt2[1])))
-            # _box = (pt1[0], pt1[1], pt2[0], pt2[1])
-            # print('box', _box )
         
-            # print('center', getCenter(_box))
-            # print ('bbox', centralize(_box,(100,100)))
-                        
-            if not math.isnan(b1[0][0]):
-                acc = getIoU(b1, b2)
+        prediction = kalman.predict()
+        prediction[0] = prediction[0] + initState[0]
+        prediction[1] = prediction[1] + initState[1]
+        
+        p = np.asarray(centralize(b2, (prediction[0],prediction[1])))
+        p = np.int0(p)
+        
+        kpt1 = p[0],p[1]
+        kpt2 = p[2],p[3]
+        b2 = (kpt1, kpt2)
+        # # kpt1,kpt2 = centralize((pt1,pt2), prediction)
+
+        frame = cv2.rectangle(frame, kpt1, kpt2, (0, 0, 0), 3)
+        frame = cv2.rectangle(frame, kpt1, kpt2, (0, 255, 0), 2)
+
+
+                    
+        if not math.isnan(b1[0][0]):
+            acc = getIoU(b1, b2)
+            if acc>0:
                 mAcc = (mAcc*(counter-1)+acc)/counter
                 rbs = math.exp(-30 * f/counter)
                 print ('\nfalhas:', f)
                 print ('frames válidos:', counter)
                 counter = counter + 1
-            
+                stats.append((mAcc,rbs))
+            else:
+                bb = content[i].strip().split(',')
+
+                Nan = False
+                for j in range(len(bb)):
+                    Nan = Nan or math.isnan(float(bb[j]))
+                if not Nan:
+                    bx, by, a, b = (int(float(bb[0])), int(float(bb[1])),
+                                    int(float(bb[2])), int(float(bb[3])))
+                    mAcc = (mAcc*(counter-1))/counter
+                    f = f+1
+                    rbs = math.exp(-30 * f/counter)
+                    stats.append((mAcc, rbs))
+                    counter = counter + 1
+                    bbox = (int(float(bb[0])), int(float(bb[1])),
+                            int(float(bb[2])), int(float(bb[3])))
+                    bbox = (bx, by, a - bx, b - by)
+                    tracker = cv2.TrackerKCF_create()
+                    ok = tracker.init(frame, bbox)
+
+                    pt1 = (int(bbox[0]), int(bbox[1]))
+                    pt2 = (int(bbox[0] + bbox[2]), int(bbox[1]+bbox[3]))
+                    frame = cv2.rectangle(frame, pt1, pt2, (0, 0, 0), 3)
+                    frame = cv2.rectangle(frame, pt1, pt2, (0, 255, 255), 2)
+                else:
+                    stats.append((None, None))
         else:
-            
-            # h, w, c = frame.shape
-            # by, bx, bh, bw = previous
-            # cv2.imshow('template', template)
-            # res = cv2.matchTemplate(frame, template, cv2.TM_SQDIFF)
-            # min_val, max_val, top_left, bottom_right = cv2.minMaxLoc(res)
-            # by, bx = top_left
-            # bbox = (by, bx, bh, bw)
-
-            
-            bb = content[i].strip().split(',')
-            
-            Nan = False
-            for j in range(len(bb)):
-                Nan = Nan or math.isnan(float(bb[j]))
-            if not Nan:
-                bx, by, a, b = (int(float(bb[0])), int(float(bb[1])),
-                                int(float(bb[2])), int(float(bb[3])))
-                mAcc = (mAcc*(counter-1))/counter
-                f = f+1
-                rbs = math.exp(-30* f/counter)
-                counter = counter + 1
-                bbox = (int(float(bb[0])), int(float(bb[1])),
-                        int(float(bb[2])), int(float(bb[3])))
-                bbox = (bx, by, a - bx, b - by)
-                tracker = cv2.TrackerKCF_create()
-                ok = tracker.init(frame, bbox)
-
-                pt1 = (int(bbox[0]), int(bbox[1]))
-                pt2 = (int(bbox[0] + bbox[2]), int(bbox[1]+bbox[3]))
-                frame = cv2.rectangle(frame, pt1, pt2, (0, 0, 0), 3)
-                frame = cv2.rectangle(frame, pt1, pt2, (0, 255, 255), 2)
-                
+            stats.append((None, None))
         cv2.putText(frame, "f:{}, acc: {:.2f}, rbs: {:.2f}".format(i, mAcc*100, rbs*100), (10, 20),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1)
         cv2.imshow('video', frame)
@@ -210,13 +207,15 @@ while(keepGoing):
                 keepGoing = False
                 break
             if k == 32:  # spae
-                if (i==944):
+                if (i==9927):
                     keepGoing = False
+                    stats = np.asarray(stats)
+                    np.save("car2-stats-kalman", stats)
                 break
    
 while (True):
     cv2.imshow('video', frame)
-    k = cv2.waitKey(33) & 0xff
+    k = cv2.waitKey(1) & 0xff
 
     if k == 27:
         cv2.destroyAllWindows
