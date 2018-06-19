@@ -7,6 +7,7 @@ import imutils
 filenames = glob.glob('./dataset/*/*')
 videos = glob.glob('./videos/*.mp4')
 
+#create directory for Ground Truth
 for video in videos:
   video = video.replace('./videos/', '')
   video = video.replace('.mp4', '')
@@ -22,8 +23,7 @@ for filename in filenames:
   blurred_image = cv2.GaussianBlur(image, (3,3), 0)
 
   gray = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2GRAY)
-  # gray = cv2.bilateralFilter(gray, 9, .1, .1)
-  # edged = cv2.Canny(gray, 30, 200)
+  
   ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
   mask = 255 - thresh
   # # mask = thresh
@@ -40,8 +40,9 @@ for filename in filenames:
   for contour in contours:
     area = cv2.contourArea(contour)
     
+    # only contours large enough to contain object
     if area > 100000:
-      print(area)
+      #print(area)
       # cv2.drawContours(image, contour, -1, (0,255,0),3)
       rect = cv2.minAreaRect(contour)
       
@@ -69,7 +70,7 @@ for filename in filenames:
 
       center = (int((x1+x2)/2), int((y1+y2)/2))
       size = (int(scale*(x2-x1)), int(scale*(y2-y1)))
-      # # again this was mostly for debugging purposes
+      # # mostly for debugging purposes
       # cv2.circle(img_box, center, 10, (0, 255, 0), -1)
 
       M = cv2.getRotationMatrix2D((size[0]/2, size[1]/2), angle, 1.0)

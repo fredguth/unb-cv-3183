@@ -15,7 +15,7 @@ for video in filenames:
   video = video.replace('./videos/', '')
   video = video.replace('.mp4','')
   videos.append(video)
-  directory = './dataset/'+video
+  directory = './data/boti/'+video
   if not os.path.exists(directory):
       os.makedirs(directory)
 
@@ -27,14 +27,19 @@ for video in videos:
   success, image = vidcap.read()
   
   count = 0
+  imageNumber =0
   success = True
   while success:
-    image = imutils.rotate_bound(image, 90)
-    imgname = './dataset/'+video+'/'+video+'-'+str(count).zfill(5) + '.jpg'
-    print (imgname)
-    cv2.imwrite(imgname, image)     # save frame as JPEG file      
+    if (count % 5)==0:
+      image = imutils.rotate_bound(image, 90)
+      imgname = './data/boti/'+video+'/'+video+'-'+str(imageNumber).zfill(5) + '.jpg'
+      imageNumber +=1
+      print (imgname)
+      cv2.imwrite(imgname, image)     # save frame as JPEG file      
+    
     success, image = vidcap.read()
     count += 1
+  
   
 
 
