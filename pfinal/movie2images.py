@@ -26,17 +26,17 @@ for video in videos:
   
   success, image = vidcap.read()
   
-  
+  count = 0
   imageNumber =0
   success = True
   while success:
-  
-    image = imutils.rotate_bound(image, 90)
-    imgname = './dataset/'+video+'/'+video+'-'+str(imageNumber).zfill(5) + '.jpg'
-    imageNumber +=1
-    print (imgname)
-    cv2.imwrite(imgname, image)     # save frame as JPEG file      
-  
+    if (count%4)==0 :
+      image = imutils.rotate_bound(image, 90)
+      imgname = './dataset/'+video+'/'+video+'-'+str(imageNumber).zfill(5) + '.jpg'
+      imageNumber +=1
+      print (imgname)
+      cv2.imwrite(imgname, image)     # save frame as JPEG file      
+    count +=1
     success, image = vidcap.read()
   
   

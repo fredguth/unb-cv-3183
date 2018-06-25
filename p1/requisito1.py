@@ -3,15 +3,12 @@ import scipy.spatial as sp
 import cv2
 
 global img
-img = cv2.imread('./media/venn.jpg',cv2.IMREAD_UNCHANGED)
+img = cv2.imread('../pfinal/dataset/72075/72075-00009.jpg',cv2.IMREAD_COLOR)
 imgType = type(img[0,0]).__name__
 
 def mouse_callback(event, column, line, flags, params):
     if event == 1: #left button in my mac
-        if (imgType == 'uint8'): #grayscale
-            lum = img [line, column]
-            print("(line, column):({},{}); Luminosity ({})".format(line, column,lum))
-        elif (imgType == 'ndarray'): #color         
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
             bgr = img [ line, column ]   
             rgb = list(reversed(bgr))        
             print("(line, column):({},{}); BGR ({}); RGB ({})".format(line, column,bgr, rgb))
