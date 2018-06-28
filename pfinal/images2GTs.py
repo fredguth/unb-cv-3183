@@ -34,7 +34,7 @@ def dist(img, point):
     distances = distances.reshape((lines, columns, 1))
     return distances
     
-    return distances
+
 
 def simplify(image):
     num_down = 2       # number of downsampling steps
@@ -229,7 +229,7 @@ for filename in filenames:
     area = cv2.contourArea(contour)    
     # only contours large enough to contain object
     if area > 300000:
-      image = process(image, contour, hull=True, crop=True)
+      image = process(image, contour, hull=False, crop=True)
   
 
 

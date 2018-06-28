@@ -7,16 +7,16 @@ from sklearn.model_selection import train_test_split
 from shutil import copy2
 
 
-filenames = glob.glob('./GT/*/*')
+filenames = glob.glob('./dataset/*/*')
 
 y = []
 for filename in filenames: 
   category = filename.split('/')[3]
-  category = category.split('-')[0]
+  category = category[:5]
   y.append(category)
 
 y = np.asarray(y)
-
+print (y.shape)
 X = filenames
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify = y, test_size=0.2)
@@ -31,8 +31,9 @@ def copyFiles(dataset, filenames, categories):
     if not os.path.exists(directory):
         os.makedirs(directory)
     dst = directory +'/'+name
+    print (dst)
     copy2(filenames[i], dst)
 
 copyFiles('boti/train', X_train, y_train)
 copyFiles('boti/valid', X_val, y_val)
-copyFiles('boti/test', X_test, y_test)
+copyFiles('boti/test', X_test, y_tes
