@@ -14,17 +14,17 @@ from time import time
 def findClusters (images):
   n_colors = 64
 
-  # Convert to floats instead of the default 8 bits integer coding. Dividing by
-  # 255 is important so that plt.imshow behaves works well on float data (need to
-  # be in the range [0-1])
-  images = np.array(images, dtype=np.float64) / 255
+  # # Convert to floats instead of the default 8 bits integer coding. Dividing by
+  # # 255 is important so that plt.imshow behaves works well on float data (need to
+  # # be in the range [0-1])
+  # images = np.array(images, dtype=np.float64) / 255
 
   n, h, w, d = original_shape = tuple(images.shape)
   assert d == 3
   image_array = np.reshape(images, ( n*h*w, d))
 
   print("Fitting model on a small sub-sample of the data")
-  image_array_sample = shuffle(image_array, random_state=0)[:1000]
+  image_array_sample = shuffle(image_array, random_state=0)[:n*1000]
   kmeans = KMeans(n_clusters=n_colors, random_state=0).fit(image_array_sample)
   print ("Model fit complete")
   return kmeans
@@ -38,7 +38,7 @@ def getAllColors ():
   table = np.asarray(table)
   return table
 
-def getGTData()
+def getGTData():
   # Xgt = original source data of groundtruth
   # G = GTruth
   GTfiles = glob.glob('./GT/*/*')
@@ -47,6 +47,7 @@ def getGTData()
   for filename in GTfiles:
     xgFile = filename.replace('GT', 'dataset')
     xgFile = xgFile.replace('-mask', '')
+    print ('r', xgFile)
     gtImage = cv2.imread(filename)
     xgImage = cv2.imread(xgFile)
     xgImage = cv2.resize(xgImage, (448,448))
@@ -56,20 +57,66 @@ def getGTData()
   G = np.asarray(G)
   return Xgt, G
 
-def makeColormap(X)
+def makeMaps(X):
   allColors = getAllColors()
   kmeans = findClusters(X)
   labels = kmeans.predict(allColors)
   cc = kmeans.cluster_centers_
-
+  
   colormap = allColors
   for i in range(len(labels)):
     colormap[i] = cc[labels[i]]
   colormap = np.reshape(colormap, (256, 256, 256, 3))
-  
-  return colormap
+  labelmap = np.reshape(labels, (256, 256, 256))
+  return labelmap, colormap
 
 #__main__
 Xgt, G = getGTData()
-colormap = makeColormap(Xgt)
-colormap = np.save('colormap', colormap)
+kmeans = findClusters(Xgt)
+
+n, h, w, d = original_shape = tuple(Xgt.shape)
+Xgt= np.reshape(Xgt, ( n*h*w, d))
+labels = kmeans.predict(Xgt)
+# y = np.zeros(Xgt.shape)
+# y = kmeans.cluster_centers_[labels]
+
+gt = G/255
+gt = gt[:,:,:,0]
+gn, hn, wn= gt.shape
+gt = np.reshape(gt,(gn*hn*wn,))
+
+
+#foreground == 1
+#background == 0
+lut = np.zeros((64, 2))
+for i in range(len(labels)):
+  label = labels[i]
+  if gt[i]==0: # background
+    lut[label, 0] +=1
+  else: # foreground
+    lut[label, 1] += 1
+
+lut =  (lut[:,1]>lut[:,0]).astype("uint8")
+# print (lut, lut.sum())
+
+filenames = glob.glob('./dataset/*/*')
+
+for filename in filenames[3:4]:
+  print(filename)
+  x = cv2.imread(filename)
+  x = cv2.resize(x, (448,448))
+  (xh, xw, xd) = xshape = tuple(x.shape)
+  x = np.reshape(x, (xh*xw, xd))
+  xl = kmeans.predict(x)
+  y = np.zeros(x.shape)
+  print (kmeans.cluster_centers_.shape, lut.shape)
+  y = lut[xl]*255
+  y = np.reshape(y, (xh, xw))
+  
+  filename = filename.replace('dataset', 'GT')
+  filename = filename.replace('.jpg', '-mmask.jpg')
+  print ('w', filename)
+  cv2.imwrite(filename, y)
+
+# Xlabels = kmeans.predict(X)
+
