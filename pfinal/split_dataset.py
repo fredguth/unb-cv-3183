@@ -22,6 +22,9 @@ X = filenames
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify = y, test_size=0.2)
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, stratify= y_train, test_size=0.2)
 
+
+# print (len(X_train), len(X_val), len(X_test))
+# print (len(y_train), len(y_val), len(y_test))
 #create directories
 
 def copyFiles(dataset, filenames, categories):
@@ -36,4 +39,4 @@ def copyFiles(dataset, filenames, categories):
 
 copyFiles('boti/train', X_train, y_train)
 copyFiles('boti/valid', X_val, y_val)
-copyFiles('boti/test', X_test, y_tes
+copyFiles('boti/test', X_test, y_test)

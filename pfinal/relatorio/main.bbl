@@ -74,6 +74,15 @@ F.-F. Li, R.~Fergus, and P.~Perona, ``Learning generative visual models from
   categories.'' \emph{Computer Vision and Image Understanding}, vol. 106,
   no.~1, pp. 59--70, 2007.
 
+\bibitem{pascal}
+\BIBentryALTinterwordspacing
+M.~Everingham, S.~M.~A. Eslami, L.~V. Gool, C.~K.~I. Williams, J.~Winn, and
+  A.~Zisserman, ``The pascal visual object classes challenge: A
+  retrospective,'' \emph{International Journal of Computer Vision}, vol. 111,
+  no.~1, pp. 98--136, jun 2014. [Online]. Available:
+  \url{https://doi.org/10.1007/s11263-014-0733-5}
+\BIBentrySTDinterwordspacing
+
 \bibitem{imagenet}
 \BIBentryALTinterwordspacing
 M.~Guillaumin and V.~Ferrari, ``Large-scale knowledge transfer for object
@@ -83,8 +92,17 @@ M.~Guillaumin and V.~Ferrari, ``Large-scale knowledge transfer for object
   \url{https://doi.org/10.1109/cvpr.2012.6248055}
 \BIBentrySTDinterwordspacing
 
+\bibitem{wordnet}
+C.~Fellbaum, \emph{WordNet: An Electronic Lexical Database}.\hskip 1em plus
+  0.5em minus 0.4em\relax Bradford Books, 1998.
+
 \bibitem{fastai}
 J.~Howard \emph{et~al.}, ``fastai,'' \url{https://github.com/fastai/fastai},
   2018.
+
+\bibitem{ribeiro}
+L.~Ribeiro and L.~Vieiray, ``Projeto demonstrativo 04,'' Universidade de
+  Brasilia, Tech. Rep., May 2018, computer Vision course assignment by {Teo de
+  Campos}.
 
 \end{thebibliography}
