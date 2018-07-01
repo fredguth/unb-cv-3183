@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  30 JUN 2018 15:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.3.13)  1 JUL 2018 06:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -933,14 +933,8 @@ Package pdftex.def Info: slide-karpathy.png used on input line 72.
 
 
  <./long-tail.png>]
-
-LaTeX Warning: Citation `pascal' on page 2 undefined on input line 82.
-
-
-LaTeX Warning: Citation `wordnet' on page 2 undefined on input line 82.
-
 LaTeX Font Info:    Try loading font information for U+msa on input line 99.
-(/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
+ (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 99.
@@ -976,12 +970,17 @@ File: erros.png Graphic file (type png)
  <use erros.png>
 Package pdftex.def Info: erros.png used on input line 168.
 (pdftex.def)             Requested size: 252.0pt x 223.14632pt.
-
+ [3 <./coffees.png> <./florattas.png> <./matches.png> <./erros.png>]
 
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 176.
 
-[3 <./coffees.png> <./florattas.png> <./matches.png>] (./main.bbl
+
+Underfull \hbox (badness 1424) in paragraph at lines 195--196
+\OT1/ptm/m/n/10 da ima-gem de v[]^^Pdeo. Cri-a-mos um clas-si-fi-ca-dor de
+ []
+
+(./main.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 29--32
 \OT1/ptm/m/n/8 / / image-[]net . org / challenges / talks[]2017 / imagenet[]ils
 vrc2017[]v1 . 0 . pdf$,
@@ -1023,31 +1022,32 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4 <./erros.png>] (./main.aux)
+[4] (./main.aux)
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 6459 strings out of 492995
- 96964 string characters out of 6132704
- 176502 words of memory out of 5000000
+ 6458 strings out of 492995
+ 96959 string characters out of 6132704
+ 177549 words of memory out of 5000000
  9873 multiletter control sequences out of 15000+600000
- 41634 words of font info for 86 fonts, out of 8000000 for 9000
+ 40527 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,10n,49p,845b,355s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,10n,49p,836b,355s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/tex
-live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/
-2017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf
--dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/fon
-ts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/u
-rw/times/utmri8a.pfb>
-Output written on main.pdf (4 pages, 2446730 bytes).
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
+xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-
+dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/texlive/2017/texmf-dist/font
+s/type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/ur
+w/times/utmri8a.pfb>
+Output written on main.pdf (4 pages, 2455702 bytes).
 PDF statistics:
- 58 PDF objects out of 1000 (max. 8388607)
- 33 compressed objects within 1 object stream
+ 62 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
