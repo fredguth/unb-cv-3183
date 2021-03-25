@@ -7,7 +7,7 @@ h5py==2.7.1
 idna==2.5
 Keras==2.1.6
 numpy==1.14.3
-PyYAML==3.12
+PyYAML==5.4
 requests==2.18.1
 scipy==1.1.0
 shodan==1.7.1
